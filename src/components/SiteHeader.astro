@@ -1,0 +1,243 @@
+---
+const nav = [
+  { href: '/', label: '首页' },
+  { href: '/fieldwork', label: '项目实践' },
+  { href: '/people', label: '田野人物' },
+  { href: '/results', label: '成果展示' },
+  { href: '/archive', label: '数字档案' },
+  { href: '/about', label: '关于项目' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isActive(href: string) {
+  if (href === '/') return path === '/';
+  return path === href || path.startsWith(href + '/');
+}
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="邮你前行 · 地戏新生 —— 返回首页">
+      <span class="brand-mark" aria-hidden="true">
+        <img src="/brand-seal.svg" alt="" width="36" height="36" />
+      </span>
+      <span class="brand-text">
+        <strong>邮你前行 · 地戏新生</strong>
+        <small>贵州长顺地戏非遗数字化保护田野实践</small>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="主导航">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list">
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="sr-only">菜单</span>
+      </button>
+      <ul id="nav-list">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 68px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .brand-mark {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    opacity: 0.92;
+  }
+
+  .brand-mark img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .brand-text strong {
+    font-family: var(--font-serif);
+    font-size: 1.02rem;
+    letter-spacing: 0.06em;
+  }
+
+  .brand-text small {
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.14em;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.35em 0.85em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .site-nav a:hover {
+    color: var(--accent);
+  }
+
+  .site-nav a[aria-current='page'] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .nav-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    background: transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .nav-toggle-bar,
+  .nav-toggle-bar::before,
+  .nav-toggle-bar::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 20px;
+    height: 2px;
+    background: var(--ink);
+    transform: translateX(-50%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .nav-toggle-bar {
+    top: 50%;
+  }
+
+  .nav-toggle-bar::before {
+    top: -6px;
+  }
+
+  .nav-toggle-bar::after {
+    top: 6px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 860px) {
+    .brand-text small {
+      display: none;
+    }
+
+    :global(html.js) .nav-toggle {
+      display: block;
+    }
+
+    :global(html.js) .site-nav ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      padding: 0.5rem 1.25rem 1rem;
+    }
+
+    :global(html.js) .site-nav ul[data-open='true'] {
+      display: flex;
+    }
+
+    :global(html:not(.js)) .header-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      padding-block: 0.75rem;
+    }
+
+    :global(html:not(.js)) .site-nav {
+      width: 100%;
+    }
+
+    :global(html:not(.js)) .site-nav ul {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .site-nav a {
+      width: 100%;
+      border-bottom: none;
+      border-left: 2px solid transparent;
+    }
+
+    .site-nav a[aria-current='page'] {
+      border-left-color: var(--accent);
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const list = document.querySelector<HTMLUListElement>('#nav-list');
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    list?.setAttribute('data-open', String(!open));
+  });
+</script>

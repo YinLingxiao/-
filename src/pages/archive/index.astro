@@ -1,0 +1,153 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { img } from '../../utils/images';
+
+const masks = await getCollection('masks');
+const media = await getCollection('media');
+const wallCount = masks.filter((m) => m.data.set === 'wall').length;
+const workshopCount = masks.filter((m) => m.data.set === 'workshop').length;
+---
+
+<Base
+  title="数字档案"
+  description="邮你前行-地戏新生数字档案：47 张面具数字图鉴、13 段影像条目与地戏知识背景。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">数字档案 · ARCHIVE</p>
+      <h1>可以一页页翻看的地戏</h1>
+      <p class="lede">
+        面具、影像与背景知识三部分，构成本项目的公开数字档案。全部条目均带拍摄时间、地点与授权字段。
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container archive-grid">
+      <a class="archive-card reveal" href="/archive/masks">
+        <div class="archive-card-media">
+          <Picture
+            src={img('masks/mask-8530.jpg')}
+            alt="演武堂墙面陈列地戏面具"
+            widths={[480, 800]}
+            sizes="(max-width: 860px) 100vw, 360px"
+            formats={['avif', 'webp']}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="archive-card-body">
+          <h2>面具数字图鉴</h2>
+          <p>{wallCount} 张演武堂墙面陈列 + {workshopCount} 张燕世忠工坊实物近景，支持筛选、放大与逐条查看。</p>
+          <span class="link-more">进入图鉴</span>
+        </div>
+      </a>
+
+      <a class="archive-card reveal" href="/archive/media">
+        <div class="archive-card-media">
+          <Picture
+            src={img('performance/yanwutang-scene.jpg')}
+            alt="演武堂地戏表演现场"
+            widths={[480, 800]}
+            sizes="(max-width: 860px) 100vw, 360px"
+            formats={['avif', 'webp']}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="archive-card-body">
+          <h2>影像档案</h2>
+          <p>{media.length} 段处理后视频的代表性短片：地戏表演、面具讲解、人物采访、工坊环境与屯堡空间。</p>
+          <span class="link-more">进入影像档案</span>
+        </div>
+      </a>
+
+      <a class="archive-card reveal" href="/archive/context">
+        <div class="archive-card-media">
+          <Picture
+            src={img('villages/tianlong-stone-1.jpg')}
+            alt="天龙古镇石刻地标"
+            widths={[480, 800]}
+            sizes="(max-width: 860px) 100vw, 360px"
+            formats={['avif', 'webp']}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="archive-card-body">
+          <h2>地戏知识</h2>
+          <p>地戏概述、历史背景、面具服装兵器、表演方式、剧目角色与屯堡文化环境。</p>
+          <span class="link-more">了解地戏</span>
+        </div>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-l);
+  }
+
+  .archive-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .archive-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .archive-card-media img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .archive-card-body {
+    padding: var(--space-m);
+  }
+
+  .archive-card-body h2 {
+    font-size: var(--fs-h3);
+  }
+
+  .archive-card-body p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 1024px) {
+    .archive-grid {
+      grid-template-columns: 1fr;
+      max-width: 560px;
+    }
+  }
+</style>

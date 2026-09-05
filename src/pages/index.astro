@@ -1,0 +1,561 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import QuoteCard from '../components/QuoteCard.astro';
+import VideoCard from '../components/VideoCard.astro';
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { img } from '../utils/images';
+
+const people = (await getCollection('people')).sort((a, b) => a.data.order - b.data.order);
+const featuredQuotes = people.filter((p) => p.data.quotes.length > 0).slice(0, 3);
+const masks = await getCollection('masks');
+const featuredMasks = masks.filter((m) => m.data.featured).slice(0, 8);
+const fieldwork = (await getCollection('fieldwork')).sort((a, b) => a.data.order - b.data.order);
+const media = await getCollection('media');
+const heroVideo = media.find((m) => m.data.slug === '13-performance-sanying');
+
+const siteDesc =
+  '北京邮电大学「邮你前行-地戏新生」社会实践团 2026 年暑期赴贵州长顺县、安顺天龙古镇，对国家级非物质文化遗产地戏开展数字化保护田野实践。';
+---
+
+<Base title="邮你前行 · 地戏新生" description={siteDesc}>
+  <!-- ============ 1. 主视觉 ============ -->
+  <section class="hero">
+    <div class="hero-media">
+      <Picture
+        src={img('hero/yanwutang-closeup.jpg')}
+        alt="演武堂地戏演员面具特写"
+        widths={[960, 1440, 2000, 2400]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
+    <div class="container hero-panel-wrap">
+      <div class="hero-panel">
+        <p class="hero-eyebrow">国家级非物质文化遗产 · 贵州屯堡地戏</p>
+        <h1>邮你前行<br /><span class="hero-accent">地戏新生</span></h1>
+        <p class="hero-sub">
+          北京邮电大学社会实践团赴贵州长顺、安顺天龙古镇，为六百年屯堡地戏留下一份数字档案。
+        </p>
+        <p class="hero-meta">2026 年暑期 ｜ 贵州长顺 · 安顺天龙 ｜ 6 人团队</p>
+        <nav class="hero-paths" aria-label="快速进入">
+          <a href="/fieldwork">读三日田野记录</a>
+          <a href="/people">认识田野人物</a>
+          <a href="/archive">查阅数字档案</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. 项目缘起 ============ -->
+  <section class="section" id="origin">
+    <div class="container origin-grid">
+      <div class="origin-text reveal">
+        <div class="section-head">
+          <p class="eyebrow">缘起 · WHY</p>
+          <h2>面具之下，是六百年的屯堡记忆</h2>
+        </div>
+        <div class="prose">
+          <p class="drop-cap">
+            地戏是流行于贵州屯堡地区的汉族戏曲，源于明代军屯文化。演员头戴木刻面具、背扎靠旗，以武打与方言唱腔演绎历史演义——关羽的忠、薛仁贵的征东征西，承载着屯堡人的历史记忆与英雄崇拜。
+          </p>
+          <p>
+            面具会朽，人的记忆也会随时间改变。金云祥在采访中回忆，剧团原有三四位老前辈，如今只剩两位；年轻团员也要面对养家与长期坚持的现实压力。依赖口传身授的经历如果没有及时记录，日后便难以完整还原。
+          </p>
+          <p class="text-soft">
+            2026 年暑期，北京邮电大学「邮你前行-地戏新生」实践团走进长顺县广顺镇、马路乡与安顺天龙古镇，用口述史采访与数字影像，为这门乡土非遗做一次系统的数字记录——帮助它在当代被看见、被记住。
+          </p>
+        </div>
+      </div>
+      <Figure
+        src="fieldwork/0804-carving-1.jpg"
+        alt="燕世忠在工坊中雕刻地戏面具"
+        caption="8 月 4 日，广顺镇，燕世忠在工坊中雕刻面具"
+        class="reveal"
+      />
+    </div>
+  </section>
+
+  <!-- ============ 3. 我们做了什么 ============ -->
+  <section class="section section--alt" id="work">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">实践 · WHAT</p>
+        <h2>三天田野，五项工作</h2>
+      </div>
+      <ol class="work-list">
+        <li class="reveal">
+          <span class="work-num">01</span>
+          <div>
+            <h3>口述史采访</h3>
+            <p>采访手艺人、剧团团长、老中青三代演员与学徒，逐份转写、人工校对，留存第一人称的地戏记忆。</p>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="work-num">02</span>
+          <div>
+            <h3>面具与器物影像记录</h3>
+            <p>对演武堂墙面陈列与工坊实物面具逐张拍摄建档，同步记录兵器、服装、手抄曲目与荣誉实物。</p>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="work-num">03</span>
+          <div>
+            <h3>表演影像拍摄</h3>
+            <p>在演武堂完整记录《三英战吕布》演出，保留面具、靠旗、武打与方言唱腔的现场状态。</p>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="work-num">04</span>
+          <div>
+            <h3>素材整理与数字建档</h3>
+            <p>全部素材按日期与主题一次分类、只读归档；建立带授权字段的数据清单，形成内部数字档案底账。</p>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="work-num">05</span>
+          <div>
+            <h3>专题网站与纪实视频</h3>
+            <p>以本站与纪实影像呈现田野成果，让档案走出硬盘，成为可浏览、可传播的非遗窗口。</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ 4. 田野时间线 ============ -->
+  <section class="section" id="timeline">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">路线 · ROUTE</p>
+        <h2>三天，三个村寨空间</h2>
+        <p class="lede">从长顺县广顺镇的工坊，到马路乡的剧团驻地，再到安顺天龙古镇的演武堂。</p>
+      </div>
+      <div class="timeline-list">
+        {
+          fieldwork.map((entry) => (
+            <article class="timeline-item reveal">
+              <div class="timeline-date">
+                <time datetime={entry.data.date}>{entry.data.date.slice(5).replace('-', ' / ')}</time>
+                <span>{entry.data.place}</span>
+              </div>
+              <div class="timeline-body">
+                <h3>{entry.data.title}</h3>
+                <p>{entry.data.summary}</p>
+                <a class="link-more" href="/fieldwork">查看完整田野记录</a>
+              </div>
+              {entry.data.photos[0] && (
+                <div class="timeline-photo">
+                  <Picture
+                    src={img(entry.data.photos[0].src)}
+                    alt={entry.data.photos[0].alt}
+                    widths={[480, 800]}
+                    sizes="(max-width: 860px) 100vw, 320px"
+                    formats={['avif', 'webp']}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. 田野人物速览 ============ -->
+  <section class="section section--alt" id="people">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">人物 · PEOPLE</p>
+        <h2>他们戴着面具，也托着面具</h2>
+        <p class="lede">手艺人、团长、老表演者、摄影记录者、讲解员，以及正在学戏的少年。</p>
+      </div>
+      <div class="quote-grid">
+        {
+          featuredQuotes.map((p) => (
+            <QuoteCard
+              quote={p.data.quotes[0].text}
+              name={p.data.name}
+              role={p.data.role}
+              href={`/people/${p.data.slug}`}
+            />
+          ))
+        }
+      </div>
+      <p class="section-more reveal"><a class="link-more" href="/people">认识全部 {people.length} 位田野人物</a></p>
+    </div>
+  </section>
+
+  <!-- ============ 6. 成果概览 ============ -->
+  <section class="section" id="results">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">成果 · RESULTS</p>
+        <h2>一份看得见的数字档案</h2>
+        <p class="lede">前三项为本站公开收录量；13 份转写稿仅作内部内容来源，本站只公开经校对的精选引语。</p>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat"><span class="stat-num">34</span><span class="stat-label">精选照片</span></div>
+        <div class="stat"><span class="stat-num">47</span><span class="stat-label">面具记录照片</span></div>
+        <div class="stat"><span class="stat-num">13</span><span class="stat-label">处理后视频</span></div>
+        <div class="stat"><span class="stat-num">13</span><span class="stat-label">内部转写来源</span></div>
+      </div>
+      {heroVideo && (
+        <div class="hero-video reveal">
+          <VideoCard
+            src={heroVideo.data.src}
+            poster={heroVideo.data.poster}
+            title={heroVideo.data.title}
+            summary={heroVideo.data.summary}
+            durationSec={heroVideo.data.durationSec}
+            categoryLabel={heroVideo.data.categoryLabel}
+          />
+        </div>
+      )}
+      <p class="section-more reveal"><a class="btn" href="/results">查看全部成果</a></p>
+    </div>
+  </section>
+
+  <!-- ============ 7. 精选面具 ============ -->
+  <section class="section section--alt" id="masks">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">图鉴 · MASKS</p>
+        <h2>一面一将，一面一性格</h2>
+        <p class="lede">演武堂石墙前的陈列与工坊木板上的实物——面具留在它们真实的文化空间里。</p>
+      </div>
+      <ul class="mask-strip" role="list">
+        {
+          featuredMasks.map((m) => (
+            <li class="reveal">
+              <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看面具档案 ${m.data.id}`}>
+                <Picture
+                  src={img(m.data.image)}
+                  alt={m.data.alt}
+                  widths={[320, 560]}
+                  sizes="(max-width: 640px) 45vw, 240px"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="section-more reveal"><a class="link-more" href="/archive/masks">进入面具数字图鉴（47 张）</a></p>
+    </div>
+  </section>
+
+  <!-- ============ 8. 团队与致谢 ============ -->
+  <section class="section" id="team">
+    <div class="container--narrow team-block reveal">
+      <div class="section-head">
+        <p class="eyebrow">致谢 · THANKS</p>
+        <h2>谢谢每一位打开家门与戏箱的人</h2>
+      </div>
+      <div class="prose">
+        <p>
+          本项目由北京邮电大学「邮你前行-地戏新生」社会实践团 6 名成员共同完成。感谢燕世忠一家、长顺农民剧团金云祥团长与全体团员、天龙古镇演武堂冯圣平与青年学徒——他们打开了家门、服装室与戏台，也打开了六百年的记忆。
+        </p>
+        <p class="text-soft">本站全部采访、肖像与影像素材均已获得项目展示所需授权。</p>
+      </div>
+      <p><a class="btn btn--ghost" href="/about">了解团队与项目</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- 主视觉 ---------- */
+  .hero {
+    position: relative;
+  }
+
+  .hero-media {
+    height: min(78vh, 780px);
+    overflow: hidden;
+  }
+
+  .hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+
+  .hero-panel-wrap {
+    position: relative;
+    margin-top: -9rem;
+    z-index: 2;
+  }
+
+  .hero-panel {
+    background: var(--bg);
+    border-top: 4px solid var(--accent);
+    box-shadow: 0 12px 40px rgba(26, 26, 23, 0.14);
+    padding: var(--space-l) var(--space-l) var(--space-m);
+    max-width: 620px;
+  }
+
+  .hero-eyebrow {
+    font-size: var(--fs-meta);
+    letter-spacing: 0.28em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1em;
+  }
+
+  .hero-panel h1 {
+    font-size: var(--fs-display);
+    line-height: 1.15;
+    margin-bottom: 0.35em;
+  }
+
+  .hero-accent {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--ink);
+    max-width: 26em;
+  }
+
+  .hero-meta {
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    letter-spacing: 0.16em;
+    margin: 1.2em 0 0;
+    padding-top: 1em;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero-paths {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+    margin-top: var(--space-s);
+  }
+
+  .hero-paths a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration-color: var(--accent-2);
+    text-underline-offset: 0.3em;
+  }
+
+  .hero-paths a::after {
+    content: "→";
+    margin-left: 0.35em;
+    color: var(--accent);
+  }
+
+  /* ---------- 缘起 ---------- */
+  .origin-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  /* ---------- 做了什么 ---------- */
+  .work-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-l) var(--space-xl);
+    counter-reset: work;
+  }
+
+  .work-list li {
+    display: flex;
+    gap: 1.2rem;
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+
+  .work-list li:last-child {
+    grid-column: 1 / -1;
+    max-width: 48rem;
+  }
+
+  .work-num {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent-2);
+    line-height: 1.2;
+  }
+
+  .work-list h3 {
+    font-size: var(--fs-h3);
+    margin-bottom: 0.3em;
+  }
+
+  .work-list p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    margin: 0;
+  }
+
+  /* ---------- 时间线 ---------- */
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 160px 1fr 320px;
+    gap: var(--space-l);
+    align-items: center;
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-m);
+  }
+
+  .timeline-date time {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .timeline-date span {
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    letter-spacing: 0.08em;
+  }
+
+  .timeline-body h3 {
+    font-size: var(--fs-h3);
+  }
+
+  .timeline-body p {
+    color: var(--ink-soft);
+    margin-bottom: 0.5em;
+  }
+
+  .timeline-photo img {
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  /* ---------- 人物速览 ---------- */
+  .quote-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+  }
+
+  .section-more {
+    margin-top: var(--space-l);
+  }
+
+  /* ---------- 成果 ---------- */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-m);
+    border-block: 1px solid var(--line);
+    padding: var(--space-m) 0;
+    margin-bottom: var(--space-l);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .hero-video {
+    max-width: 860px;
+  }
+
+  /* ---------- 面具 ---------- */
+  .mask-strip {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-m);
+  }
+
+  .mask-strip img {
+    border-radius: var(--radius);
+    transition: transform 0.35s ease;
+  }
+
+  .mask-strip a:hover img {
+    transform: scale(1.03);
+  }
+
+  /* ---------- 团队 ---------- */
+  .team-block {
+    text-align: left;
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width: 1024px) {
+    .quote-grid,
+    .stat-row,
+    .mask-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .timeline-item {
+      grid-template-columns: 120px 1fr 240px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .origin-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-l);
+    }
+    .work-list {
+      grid-template-columns: 1fr;
+    }
+    .timeline-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+    }
+    .timeline-photo {
+      max-width: 420px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-media {
+      height: 52vh;
+    }
+    .hero-panel-wrap {
+      margin-top: -5rem;
+    }
+    .hero-panel {
+      padding: var(--space-m);
+    }
+    .quote-grid,
+    .stat-row {
+      grid-template-columns: 1fr;
+    }
+    .mask-strip {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-s);
+    }
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Lightbox from '../../../components/Lightbox.astro';
+import { Picture, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { img } from '../../../utils/images';
+
+const masks = (await getCollection('masks')).sort((a, b) => a.data.index - b.data.index);
+
+// 为灯箱生成大图 URL
+const masksWithLarge = await Promise.all(
+  masks.map(async (m) => {
+    const large = await getImage({ src: img(m.data.image), width: 1600, format: 'webp' });
+    return { ...m, largeSrc: large.src };
+  }),
+);
+
+const wall = masksWithLarge.filter((m) => m.data.set === 'wall');
+const workshop = masksWithLarge.filter((m) => m.data.set === 'workshop');
+---
+
+<Base
+  title="面具数字图鉴"
+  description={`地戏面具数字图鉴：${wall.length} 张演武堂墙面陈列 + ${workshop.length} 张燕世忠工坊实物近景，保留真实陈列空间，支持筛选与放大查看。`}
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">数字档案 · MASKS</p>
+      <h1>面具数字图鉴</h1>
+      <p class="lede">
+        共 {masks.length} 张记录照片。面具保留石墙与木板的陈列背景——它们属于那个空间，而非白底样本。角色身份未经受访者确认的一律标注「待考证」。
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="filter-bar" role="group" aria-label="按来源筛选面具">
+        <button type="button" class="filter-btn" data-filter="all" aria-pressed="true">全部（{masks.length}）</button>
+        <button type="button" class="filter-btn" data-filter="wall" aria-pressed="false">演武堂墙面陈列（{wall.length}）</button>
+        <button type="button" class="filter-btn" data-filter="workshop" aria-pressed="false">燕世忠工坊实物（{workshop.length}）</button>
+      </div>
+      <p id="mask-filter-status" class="filter-status" aria-live="polite" aria-atomic="true">
+        当前显示：全部，{masks.length} 条记录
+      </p>
+
+      <ul class="mask-grid" role="list">
+        {
+          masksWithLarge.map((m) => (
+            <li class="mask-cell reveal" data-set={m.data.set}>
+              <button
+                type="button"
+                class="mask-thumb"
+                data-lightbox
+                data-lightbox-src={m.largeSrc}
+                data-lightbox-alt={m.data.alt}
+                data-lightbox-caption={`${m.data.setLabel} ｜ ${m.data.captureDate} ｜ ${m.data.place}`}
+                aria-label={`放大查看：${m.data.alt}`}
+              >
+                <Picture
+                  src={img(m.data.image)}
+                  alt={m.data.alt}
+                  widths={[300, 520]}
+                  sizes="(max-width: 640px) 45vw, 260px"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <div class="mask-cell-meta">
+                <span class="mask-id">{m.data.id}</span>
+                <a href={`/archive/masks/${m.data.slug}`}>详情 →</a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Lightbox />
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--space-s);
+  }
+
+  .filter-status {
+    margin: 0 0 var(--space-l);
+    color: var(--ink-soft);
+    font-size: var(--fs-meta);
+    letter-spacing: 0.06em;
+  }
+
+  .filter-btn {
+    min-height: 44px;
+    padding: 0.4em 1.2em;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .filter-btn[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .mask-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-m);
+  }
+
+  .mask-cell[data-hidden='true'] {
+    display: none;
+  }
+
+  .mask-thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .mask-thumb img {
+    border-radius: var(--radius);
+    width: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  .mask-thumb:hover img {
+    transform: scale(1.02);
+  }
+
+  .mask-cell-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.5em;
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+  }
+
+  .mask-cell-meta a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .mask-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-s);
+    }
+  }
+</style>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const cells = document.querySelectorAll<HTMLElement>('.mask-cell');
+  const status = document.querySelector<HTMLElement>('#mask-filter-status');
+
+  btns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'all';
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let visibleCount = 0;
+      cells.forEach((cell) => {
+        const show = filter === 'all' || cell.dataset.set === filter;
+        cell.setAttribute('data-hidden', String(!show));
+        if (show) visibleCount += 1;
+      });
+      const label = btn.textContent?.replace(/（.*）/, '') ?? '全部';
+      if (status) status.textContent = `当前显示：${label}，${visibleCount} 条记录`;
+    });
+  });
+</script>

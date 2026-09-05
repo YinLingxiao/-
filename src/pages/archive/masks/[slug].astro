@@ -1,0 +1,189 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Figure from '../../../components/Figure.astro';
+import VideoCard from '../../../components/VideoCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const masks = await getCollection('masks');
+  return masks.map((m) => ({ params: { slug: m.data.slug }, props: { mask: m } }));
+}
+
+const { mask } = Astro.props;
+const { data } = mask;
+
+const allPeople = await getCollection('people');
+const relatedPeople = allPeople.filter((p) => data.relatedPeople.includes(p.data.slug));
+
+const allMedia = await getCollection('media');
+// 工坊实物关联燕世忠口述史；墙面陈列关联面具讲解与演武堂影像
+const relatedMedia =
+  data.set === 'workshop'
+    ? allMedia.filter((m) => ['01-yan-workshop', '03-yan-interview-2'].includes(m.data.slug))
+    : allMedia.filter((m) => ['09-mask-demo-1', '10-mask-demo-2', '13-performance-sanying'].includes(m.data.slug));
+---
+
+<Base title={`面具档案 ${data.id}`} description={`${data.alt}。${data.setLabel}，摄于 ${data.captureDate}，${data.place}。`}>
+  <article class="mask-page container">
+    <nav class="crumb" aria-label="面包屑">
+      <a href="/archive">数字档案</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/archive/masks">面具数字图鉴</a>
+      <span aria-hidden="true"> / </span>
+      <span aria-current="page">{data.id}</span>
+    </nav>
+
+    <div class="mask-layout">
+      <Figure src={data.image} alt={data.alt} caption={`${data.setLabel}（保留原始陈列环境）`} eager widths={[640, 960, 1440, 2000]} sizes="(max-width: 860px) 100vw, 720px" class="mask-figure" />
+
+      <div class="mask-info">
+        <p class="eyebrow">面具档案 · {data.set === 'wall' ? 'WALL' : 'WORKSHOP'}</p>
+        <h1>{data.id}</h1>
+        <dl class="mask-meta">
+          <dt>来源</dt><dd>{data.setLabel}</dd>
+          <dt>拍摄时间</dt><dd>{data.captureDate}</dd>
+          <dt>拍摄地点</dt><dd>{data.place}</dd>
+          <dt>角色</dt><dd>{data.role}</dd>
+          <dt>授权状态</dt><dd>{data.consentLevel === 'confirmed' ? '已获展示授权' : '待确认'}</dd>
+        </dl>
+        <div class="prose mask-notes">
+          <p>
+            {data.set === 'wall'
+              ? '此面具陈列于天龙古镇演武堂墙面。本站记录其现场陈列状态，未逐尊确认具体演出使用情况。'
+              : '此面具为面具雕刻手艺人燕世忠工坊中的实物。燕世忠在采访中讲解了部分面具角色的来历与雕刻讲究。'}
+          </p>
+          <p class="text-soft">
+            {data.role === '待考证'
+              ? '角色身份需与受访者逐尊核对后方可标注；在确认之前，本条目保留「待考证」。相关讲解见下方影像。'
+              : `角色名「${data.role}」依据现场实体标签记录；后续仍可由受访者复核。相关讲解见下方影像。`}
+          </p>
+        </div>
+
+        {relatedPeople.length > 0 && (
+          <p class="mask-related-people">
+            相关人物：
+            {relatedPeople.map((p, i) => (
+              <><a href={`/people/${p.data.slug}`}>{p.data.name}</a>{i < relatedPeople.length - 1 ? '、' : ''}</>
+            ))}
+          </p>
+        )}
+      </div>
+    </div>
+
+    {relatedMedia.length > 0 && (
+      <section class="section section--tight">
+        <h2 class="related-title">相关影像</h2>
+        <div class="video-grid">
+          {relatedMedia.map((v) => (
+            <VideoCard
+              src={v.data.src}
+              poster={v.data.poster}
+              title={v.data.title}
+              summary={v.data.summary}
+              durationSec={v.data.durationSec}
+              categoryLabel={v.data.categoryLabel}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <nav class="back-nav" aria-label="返回">
+      <a class="link-more" href="/archive/masks">← 返回面具数字图鉴</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .mask-page {
+    padding-top: var(--space-l);
+  }
+
+  .crumb {
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-l);
+    letter-spacing: 0.06em;
+  }
+
+  .crumb a {
+    color: var(--ink-soft);
+  }
+
+  .mask-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .mask-info h1 {
+    font-size: var(--fs-h1);
+    letter-spacing: 0.04em;
+  }
+
+  .mask-meta {
+    margin: 0 0 var(--space-m);
+    padding: var(--space-m) 0;
+    border-block: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em 1.4em;
+    font-size: var(--fs-small);
+  }
+
+  .mask-meta dt {
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .mask-meta dd {
+    margin: 0;
+  }
+
+  .mask-notes p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+
+  .mask-related-people {
+    margin-top: var(--space-m);
+    font-size: var(--fs-small);
+    letter-spacing: 0.04em;
+  }
+
+  .related-title {
+    font-size: var(--fs-h2);
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-l);
+  }
+
+  .back-nav {
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 1024px) {
+    .video-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .mask-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

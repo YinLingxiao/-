@@ -1,0 +1,238 @@
+---
+import Base from '../../layouts/Base.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { Picture } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import { img } from '../../utils/images';
+
+export async function getStaticPaths() {
+  const people = await getCollection('people');
+  return people.map((p) => ({ params: { slug: p.data.slug }, props: { person: p } }));
+}
+
+const { person } = Astro.props;
+const { data } = person;
+const { Content } = await render(person);
+
+const allMedia = await getCollection('media');
+const personVideos = allMedia.filter((m) => data.videos.includes(m.data.slug));
+
+const allMasks = await getCollection('masks');
+const personMasks = allMasks.filter((m) => data.relatedMasks.includes(m.data.slug));
+---
+
+<Base title={data.name} description={`${data.name}，${data.role}。${data.relationToDixi}。邮你前行-地戏新生田野人物档案。`}>
+  <article class="person-page">
+    <!-- 1+2. 肖像与姓名身份 -->
+    <header class="person-hero container">
+      <div class="person-hero-photo reveal">
+        {data.portrait && (
+          <Picture
+            src={img(data.portrait)}
+            alt={data.portraitAlt ?? data.name}
+            widths={[480, 800, 1200]}
+            sizes="(max-width: 860px) 100vw, 440px"
+            formats={['avif', 'webp']}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        )}
+      </div>
+      <div class="person-hero-text">
+        <p class="eyebrow">田野人物 · PROFILE</p>
+        <h1>{data.name}</h1>
+        <p class="person-role">{data.role}</p>
+        <!-- 3. 与地戏的关系 -->
+        <p class="person-relation">{data.relationToDixi}</p>
+        <!-- 8. 采访时间地点 -->
+        <dl class="person-meta">
+          {data.interviewDate && (<><dt>采访时间</dt><dd>{data.interviewDate}</dd></>)}
+          {data.interviewPlace && (<><dt>采访地点</dt><dd>{data.interviewPlace}</dd></>)}
+          <!-- 9. 署名 -->
+          {data.credit && (<><dt>拍摄与采访</dt><dd>{data.credit}</dd></>)}
+        </dl>
+      </div>
+    </header>
+
+    <!-- 4. 人物故事 -->
+    <section class="section section--tight">
+      <div class="container--narrow prose person-story reveal">
+        <h2>人物故事</h2>
+        <Content />
+      </div>
+    </section>
+
+    <!-- 5. 精选原话 -->
+    {data.quotes.length > 0 && (
+      <section class="section section--alt section--tight">
+        <div class="container--narrow">
+          <h2 class="quotes-title reveal">精选原话</h2>
+          {data.quotes.map((q) => (
+            <blockquote class="pull-quote reveal">
+              {q.text}
+              <footer>{q.source}</footer>
+            </blockquote>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 6. 相关短视频 -->
+    {personVideos.length > 0 && (
+      <section class="section section--tight">
+        <div class="container">
+          <h2 class="videos-title reveal">相关影像</h2>
+          <div class="video-grid">
+            {personVideos.map((v) => (
+              <VideoCard
+                src={v.data.src}
+                poster={v.data.poster}
+                title={v.data.title}
+                summary={v.data.summary}
+                durationSec={v.data.durationSec}
+                categoryLabel={v.data.categoryLabel}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- 7. 相关面具/物象 -->
+    {personMasks.length > 0 && (
+      <section class="section section--alt section--tight">
+        <div class="container">
+          <h2 class="masks-title reveal">相关面具</h2>
+          <ul class="mask-mini-grid" role="list">
+            {personMasks.map((m) => (
+              <li>
+                <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看面具档案 ${m.data.id}`}>
+                  <Picture
+                    src={img(m.data.image)}
+                    alt={m.data.alt}
+                    widths={[280, 480]}
+                    sizes="(max-width: 640px) 45vw, 200px"
+                    formats={['avif', 'webp']}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p><a class="link-more" href="/archive/masks">进入面具数字图鉴</a></p>
+        </div>
+      </section>
+    )}
+
+    <nav class="container back-nav" aria-label="返回">
+      <a class="link-more" href="/people">← 返回田野人物</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .person-hero {
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+    padding-top: var(--space-xl);
+  }
+
+  .person-hero-photo img {
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  .person-hero-text h1 {
+    font-size: var(--fs-h1);
+    margin-bottom: 0.1em;
+  }
+
+  .person-role {
+    color: var(--accent);
+    font-size: 1rem;
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    margin-bottom: 1em;
+  }
+
+  .person-relation {
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    max-width: 46ch;
+  }
+
+  .person-meta {
+    margin: var(--space-m) 0 0;
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.4em 1.2em;
+    font-size: var(--fs-small);
+  }
+
+  .person-meta dt {
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .person-meta dd {
+    margin: 0;
+  }
+
+  .person-story h2,
+  .quotes-title,
+  .videos-title,
+  .masks-title {
+    font-size: var(--fs-h2);
+    margin-bottom: 0.6em;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-l);
+  }
+
+  .mask-mini-grid {
+    list-style: none;
+    margin: 0 0 var(--space-m);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-m);
+  }
+
+  .mask-mini-grid img {
+    border-radius: var(--radius);
+    transition: transform 0.3s ease;
+  }
+
+  .mask-mini-grid a:hover img {
+    transform: scale(1.03);
+  }
+
+  .back-nav {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 860px) {
+    .person-hero {
+      grid-template-columns: 1fr;
+      gap: var(--space-l);
+    }
+    .person-hero-photo {
+      max-width: 420px;
+    }
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+/**
+ * 轻量灯箱（原生 TS）：监听 [data-lightbox] 触发的图片放大查看。
+ * 键盘可操作：Esc 关闭，←/→ 切换。
+ */
+---
+
+<dialog class="lightbox" id="lightbox" aria-label="图片放大查看">
+  <button class="lightbox-close" type="button" aria-label="关闭">×</button>
+  <button class="lightbox-prev" type="button" aria-label="上一张">‹</button>
+  <figure>
+    <img src="/favicon.svg" alt="" />
+    <figcaption></figcaption>
+  </figure>
+  <button class="lightbox-next" type="button" aria-label="下一张">›</button>
+</dialog>
+
+<style>
+  .lightbox {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: min(92vw, 1200px);
+    max-height: 92vh;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(26, 26, 23, 0.88);
+  }
+
+  .lightbox figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .lightbox img {
+    max-width: 92vw;
+    max-height: 82vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+  }
+
+  .lightbox figcaption {
+    color: var(--bg);
+    font-size: var(--fs-small);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  .lightbox button {
+    position: absolute;
+    background: rgba(245, 244, 237, 0.14);
+    color: var(--bg);
+    border: 1px solid rgba(245, 244, 237, 0.4);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .lightbox button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .lightbox-close {
+    top: -1.2rem;
+    right: -1.2rem;
+  }
+
+  .lightbox-prev {
+    left: -1.4rem;
+    top: 45%;
+  }
+
+  .lightbox-next {
+    right: -1.4rem;
+    top: 45%;
+  }
+
+  @media (max-width: 640px) {
+    .lightbox-close {
+      top: 0.4rem;
+      right: 0.4rem;
+    }
+    .lightbox-prev {
+      left: 0.4rem;
+    }
+    .lightbox-next {
+      right: 0.4rem;
+    }
+  }
+</style>
+
+<script>
+  interface LBItem {
+    src: string;
+    alt: string;
+    caption: string;
+  }
+
+  const dlg = document.getElementById('lightbox') as HTMLDialogElement | null;
+  if (dlg) {
+    const imgEl = dlg.querySelector('img')!;
+    const capEl = dlg.querySelector('figcaption')!;
+    const triggers = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
+    const items: LBItem[] = triggers.map((t) => ({
+      src: t.getAttribute('data-lightbox-src') ?? '',
+      alt: t.getAttribute('data-lightbox-alt') ?? '',
+      caption: t.getAttribute('data-lightbox-caption') ?? '',
+    }));
+    let current = 0;
+    let lastFocus: HTMLElement | null = null;
+
+    function show(i: number) {
+      current = (i + items.length) % items.length;
+      const item = items[current];
+      imgEl.src = item.src;
+      imgEl.alt = item.alt;
+      capEl.textContent = item.caption;
+    }
+
+    triggers.forEach((t, i) => {
+      t.addEventListener('click', () => {
+        lastFocus = t;
+        show(i);
+        dlg!.showModal();
+      });
+    });
+
+    dlg.querySelector('.lightbox-close')?.addEventListener('click', () => dlg!.close());
+    dlg.querySelector('.lightbox-prev')?.addEventListener('click', () => show(current - 1));
+    dlg.querySelector('.lightbox-next')?.addEventListener('click', () => show(current + 1));
+
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg!.close();
+    });
+
+    dlg.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+
+    dlg.addEventListener('close', () => {
+      imgEl.src = '/favicon.svg';
+      imgEl.alt = '';
+      capEl.textContent = '';
+      lastFocus?.focus();
+    });
+  }
+</script>

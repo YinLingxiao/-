@@ -1,0 +1,244 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import { getCollection, render } from 'astro:content';
+
+const entries = (await getCollection('fieldwork')).sort((a, b) => a.data.order - b.data.order);
+
+const methods = [
+  {
+    title: '采访方法',
+    text: '半结构化访谈：围绕从艺经历、技艺细节、传承观察三条主线提问，全程录音录像，受访者知情同意。',
+  },
+  {
+    title: '拍摄方法',
+    text: '面具与器物逐张建档拍摄，保留所处空间环境（石墙、木板、货架），不做白底化处理；表演采用固定机位完整记录。',
+  },
+  {
+    title: '整理方法',
+    text: '素材当日备份、按日期与主题一次分类；自动转写后逐份人工校对，修正误字并统一人名写法。',
+  },
+];
+---
+
+<Base
+  title="项目实践"
+  description="邮你前行-地戏新生实践团的田野记录：2026 年 8 月 4–6 日，贵州长顺县广顺镇、马路乡与安顺天龙古镇的三天实践。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">项目实践 · FIELDWORK</p>
+      <h1>三天田野，从工坊到戏台</h1>
+      <p class="lede">
+        2026 年 8 月 3 日至 6 日，实践团赴贵州省黔南布依族苗族自治州长顺县（广顺镇、马路乡）与安顺市天龙古镇开展四天实践；其中 8 月 4 日至 6 日为实地记录阶段，本页的三段纪行按这三天展开。
+      </p>
+    </div>
+  </header>
+
+  <!-- 背景与目标 -->
+  <section class="section section--tight">
+    <div class="container--narrow prose reveal">
+      <h2>为什么去长顺</h2>
+      <p>
+        地戏被列入国家级非物质文化遗产名录，但其传承高度依赖具体的人：会雕面具的手艺人、记得唱本的老演员、愿意学戏的少年。长顺县广顺镇、马路乡与邻近的安顺天龙古镇，保存着从面具制作、剧团组织到日常展演的完整生态。项目的目标，是用口述史与数字影像为这一生态留下系统记录，并通过数字建档与专题网站让它被更多人看见。
+      </p>
+      <h2>前期准备</h2>
+      <p>
+        出发前，团队完成了地戏与屯堡文化的文献准备、采访提纲设计与拍摄清单制定，并就肖像与素材使用授权与受访方进行了沟通。实践期间的全部采访、拍摄均在受访者知情同意下进行。
+      </p>
+    </div>
+  </section>
+
+  <!-- 每日实践：纵向时间线 -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">每日实践 · DAILY</p>
+        <h2>田野时间线</h2>
+      </div>
+      <div class="day-list">
+        {
+          entries.map(async (entry) => {
+            const { Content } = await render(entry);
+            return (
+              <article class="day reveal">
+                <div class="day-head">
+                  <time datetime={entry.data.date}>{entry.data.date}</time>
+                  <span class="day-place">{entry.data.place}</span>
+                  <h3>{entry.data.title}</h3>
+                </div>
+                <div class="day-body prose">
+                  <Content />
+                </div>
+                <div class="day-photos">
+                  {entry.data.photos.map((p) => (
+                    <Figure src={p.src} alt={p.alt} caption={p.caption} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 540px" />
+                  ))}
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 方法 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">方法 · METHOD</p>
+        <h2>采访、拍摄与整理</h2>
+      </div>
+      <div class="method-grid">
+        {
+          methods.map((m) => (
+            <div class="method reveal">
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 协作与反思 -->
+  <section class="section section--alt">
+    <div class="container--narrow prose reveal">
+      <h2>团队协作</h2>
+      <p>
+        6 名成员按采访、摄影、摄像、记录分工轮岗：采访组负责提纲与提问，影像组负责照片与视频双机记录，记录组负责场记与素材当日备份。三天内完成全部采访与拍摄后，团队集中进行素材分类、转写校对与清单建档。
+      </p>
+      <h2>实践反思</h2>
+      <p>
+        田野中最强烈的感受是"时间的紧迫"：会雕面具的人、记得全部唱本的人都在老去，而学戏的少年才刚刚上场。数字化不能替代传承本身，但它能把声音、面孔与技艺的细节保存下来，让后来者有据可查。团队也在实践中意识到，方言采访的转写校对远比预想困难——口语音变、角色名讹传都需要逐条核实，这项工作将持续进行。
+      </p>
+      <p><a class="btn" href="/people">认识受访的七位人物</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+    max-width: 18em;
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .prose h2 {
+    font-size: var(--fs-h2);
+    margin-top: 1.2em;
+  }
+
+  .day-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxl);
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.9fr) 1.4fr;
+    grid-template-areas:
+      'head photos'
+      'body photos';
+    gap: var(--space-m) var(--space-xl);
+    border-top: 2px solid var(--ink);
+    padding-top: var(--space-m);
+  }
+
+  .day-head {
+    grid-area: head;
+  }
+
+  .day-head time {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+
+  .day-place {
+    display: block;
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    letter-spacing: 0.12em;
+    margin: 0.3em 0 0.8em;
+  }
+
+  .day-head h3 {
+    font-size: var(--fs-h3);
+  }
+
+  .day-body {
+    grid-area: body;
+  }
+
+  .day-body p {
+    color: var(--ink-soft);
+  }
+
+  .day-photos {
+    grid-area: photos;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .day-photos .figure:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-l);
+  }
+
+  .method {
+    border-top: 3px solid var(--accent-2);
+    padding-top: 1rem;
+  }
+
+  .method h3 {
+    font-size: var(--fs-h3);
+  }
+
+  .method p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+
+  @media (max-width: 1024px) {
+    .method-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .day {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'head' 'body' 'photos';
+    }
+  }
+
+  @media (max-width: 640px) {
+    .day-photos {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

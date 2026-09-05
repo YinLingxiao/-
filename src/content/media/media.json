@@ -1,0 +1,221 @@
+[
+  {
+    "id": "01-yan-workshop",
+    "slug": "01-yan-workshop",
+    "title": "走进燕世忠的工坊",
+    "src": "/media/video/01-yan-workshop.mp4",
+    "poster": "video/01-yan-workshop.jpg",
+    "durationSec": 45,
+    "category": "workshop",
+    "categoryLabel": "工坊环境",
+    "summary": "跟随镜头进入面具雕刻手艺人燕世忠家中，记录工坊环境与面具陈列。",
+    "people": [
+      "yan-shizhong"
+    ],
+    "captureDate": "2026-08-04",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "02-yan-interview-1",
+    "slug": "02-yan-interview-1",
+    "title": "燕世忠口述史（一）",
+    "src": "/media/video/02-yan-interview-1.mp4",
+    "poster": "video/02-yan-interview-1.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "燕世忠讲述地戏面具雕刻工艺与屯堡人的来历。",
+    "people": [
+      "yan-shizhong"
+    ],
+    "captureDate": "2026-08-04",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "03-yan-interview-2",
+    "slug": "03-yan-interview-2",
+    "title": "燕世忠口述史（二）",
+    "src": "/media/video/03-yan-interview-2.mp4",
+    "poster": "video/03-yan-interview-2.jpg",
+    "durationSec": 50,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "燕世忠逐尊讲解面具角色：关羽、曹操、赵云与他们的故事。",
+    "people": [
+      "yan-shizhong"
+    ],
+    "captureDate": "2026-08-04",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "04-yan-interview-3",
+    "slug": "04-yan-interview-3",
+    "title": "燕世忠口述史（三）",
+    "src": "/media/video/04-yan-interview-3.mp4",
+    "poster": "video/04-yan-interview-3.jpg",
+    "durationSec": 40,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "燕世忠回忆过去春节跳地戏、围场子的场景与方言唱调。",
+    "people": [
+      "yan-shizhong"
+    ],
+    "captureDate": "2026-08-04",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "05-fang-renliang",
+    "slug": "05-fang-renliang",
+    "title": "老表演者方仁良：十八九岁入剧团",
+    "src": "/media/video/05-fang-renliang.mp4",
+    "poster": "video/05-fang-renliang.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "方仁良回忆初中毕业后加入地戏组织、数十年的表演经历。",
+    "people": [
+      "fang-renliang"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "06-jin-laowu-1",
+    "slug": "06-jin-laowu-1",
+    "title": "金老伍：剧团里的摄影记录者",
+    "src": "/media/video/06-jin-laowu-1.mp4",
+    "poster": "video/06-jin-laowu-1.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "金老伍讲述他十八九年的摄影经历与为剧团留下的影像。",
+    "people": [
+      "jin-laowu"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "07-jin-laowu-2",
+    "slug": "07-jin-laowu-2",
+    "title": "金老伍：地戏里的英雄崇拜",
+    "src": "/media/video/07-jin-laowu-2.mp4",
+    "poster": "video/07-jin-laowu-2.jpg",
+    "durationSec": 40,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "金老伍谈地戏演绎的保家卫国情怀与英雄人物。",
+    "people": [
+      "jin-laowu"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "08-jin-yuting",
+    "slug": "08-jin-yuting",
+    "title": "少年演员金玉婷：四年级开始学地戏",
+    "src": "/media/video/08-jin-yuting.mp4",
+    "poster": "video/08-jin-yuting.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "14 岁的金玉婷讲述小学四年级起接触地戏、在学校表演的经历。",
+    "people": [
+      "jin-yuting"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "09-mask-demo-1",
+    "slug": "09-mask-demo-1",
+    "title": "金老伍展示面具（一）：戴法与保存",
+    "src": "/media/video/09-mask-demo-1.mp4",
+    "poster": "video/09-mask-demo-1.jpg",
+    "durationSec": 50,
+    "category": "mask",
+    "categoryLabel": "面具讲解",
+    "summary": "金老伍演示面具佩戴方式，讲解纱布遮盖与白纸包裹的保存方法。",
+    "people": [
+      "jin-laowu"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "10-mask-demo-2",
+    "slug": "10-mask-demo-2",
+    "title": "金老伍展示面具（二）：角色与性格",
+    "src": "/media/video/10-mask-demo-2.mp4",
+    "poster": "video/10-mask-demo-2.jpg",
+    "durationSec": 45,
+    "category": "mask",
+    "categoryLabel": "面具讲解",
+    "summary": "金老伍讲解伍天锡等角色面具的造型讲究与选角门道。",
+    "people": [
+      "jin-laowu"
+    ],
+    "captureDate": "2026-08-05",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "11-feng-shengping",
+    "slug": "11-feng-shengping",
+    "title": "冯圣平：演武堂与剧团的故事",
+    "src": "/media/video/11-feng-shengping.mp4",
+    "poster": "video/11-feng-shengping.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "演武堂讲解员冯圣平介绍剧团缘起、演员来源与每日剧目安排。",
+    "people": [
+      "feng-shengping"
+    ],
+    "captureDate": "2026-08-06",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "12-young-apprentice",
+    "slug": "12-young-apprentice",
+    "title": "青年学徒：寒暑假来学戏",
+    "src": "/media/video/12-young-apprentice.mp4",
+    "poster": "video/12-young-apprentice.jpg",
+    "durationSec": 45,
+    "category": "interview",
+    "categoryLabel": "人物采访",
+    "summary": "来自吉昌村的青年学徒讲述初二起学戏、跟随师兄进步的经历。",
+    "people": [
+      "young-apprentice"
+    ],
+    "captureDate": "2026-08-06",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  },
+  {
+    "id": "13-performance-sanying",
+    "slug": "13-performance-sanying",
+    "title": "地戏实拍：《三英战吕布》",
+    "src": "/media/video/13-performance-sanying.mp4",
+    "poster": "video/13-performance-sanying.jpg",
+    "durationSec": 60,
+    "category": "performance",
+    "categoryLabel": "地戏表演",
+    "summary": "天龙古镇演武堂地戏表演《三英战吕布》现场实录片段。",
+    "people": [],
+    "captureDate": "2026-08-06",
+    "visibility": "public",
+    "consentLevel": "confirmed"
+  }
+]

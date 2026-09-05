@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/Base.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { getCollection } from 'astro:content';
+
+const media = await getCollection('media');
+
+const groups = [
+  { key: 'performance', label: '地戏表演', desc: '演武堂现场演出实录' },
+  { key: 'mask', label: '面具讲解', desc: '面具的佩戴、保存与角色讲究' },
+  { key: 'interview', label: '人物采访', desc: '口述史采访片段' },
+  { key: 'workshop', label: '工坊环境', desc: '手艺人工作空间记录' },
+] as const;
+---
+
+<Base
+  title="影像档案"
+  description="邮你前行-地戏新生影像档案：13 段处理后视频的代表性短片，涵盖地戏表演、面具讲解、人物采访与工坊环境。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">数字档案 · MEDIA</p>
+      <h1>影像档案</h1>
+      <p class="lede">
+        13 段处理后视频按故事线编号（01–13），本站呈现每段的代表性压缩短片（20–60 秒，1080p）。完整原始视频作为内部数字档案保存，不对外发布。
+      </p>
+    </div>
+  </header>
+
+  {
+    groups.map((g) => {
+      const items = media.filter((m) => m.data.category === g.key);
+      if (items.length === 0) return null;
+      return (
+        <section class="section section--tight media-group">
+          <div class="container">
+            <div class="section-head reveal">
+              <p class="eyebrow">{g.label}</p>
+              <h2>{g.desc}</h2>
+            </div>
+            <div class="media-grid">
+              {items.map((v) => (
+                <VideoCard
+                  src={v.data.src}
+                  poster={v.data.poster}
+                  title={v.data.title}
+                  summary={`${v.data.captureDate ? v.data.captureDate + ' ｜ ' : ''}${v.data.summary}`}
+                  durationSec={v.data.durationSec}
+                  categoryLabel={v.data.categoryLabel}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <section class="section section--tight">
+    <div class="container--narrow prose reveal">
+      <h2>村寨与屯堡空间</h2>
+      <p>
+        除视频外，屯堡空间（广顺东城门、南城门，天龙石刻与屯堡名称石刻）以照片形式记录，见
+        <a href="/fieldwork">项目实践</a>各日图集。地戏的背景知识见<a href="/archive/context">地戏知识</a>。
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .media-group:nth-of-type(even) {
+    background: var(--bg-alt);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-l);
+  }
+
+  @media (max-width: 860px) {
+    .media-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

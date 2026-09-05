@@ -1,0 +1,41 @@
+---
+import { Picture } from 'astro:assets';
+import { img } from '../utils/images';
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  /** 首屏图：立即加载并提升优先级 */
+  eager?: boolean;
+  sizes?: string;
+  widths?: number[];
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  eager = false,
+  sizes = '(max-width: 1180px) 100vw, 1180px',
+  widths = [640, 960, 1440, 2000],
+  class: className,
+} = Astro.props;
+
+const meta = img(src);
+---
+
+<figure class:list={['figure', className]}>
+  <Picture
+    src={meta}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    decoding="async"
+  />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

@@ -1,0 +1,324 @@
+---
+import Base from '../layouts/Base.astro';
+import VideoCard from '../components/VideoCard.astro';
+import Figure from '../components/Figure.astro';
+import { getCollection, render } from 'astro:content';
+
+const outcomes = (await getCollection('outcomes')).sort((a, b) => a.data.order - b.data.order);
+const media = await getCollection('media');
+const perfVideo = media.find((m) => m.data.slug === '13-performance-sanying');
+
+const siteStats = [
+  { num: '34', label: '精选照片' },
+  { num: '47', label: '面具记录照片' },
+  { num: '13', label: '处理后视频' },
+  { num: '13', label: '内部转写来源' },
+];
+
+const fieldStats = [
+  { num: '9', label: '受访人数' },
+  { num: '≈809', label: '田野采集照片' },
+  { num: '44', label: '田野采集视频' },
+];
+---
+
+<Base
+  title="成果展示"
+  description="邮你前行-地戏新生项目成果：实践总结报告、纪实影像、34 张精选照片、13 份采访转写、47 张面具数字图鉴、专题网站与素材归档。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">成果展示 · RESULTS</p>
+      <h1>把田野装进一份数字档案</h1>
+      <p class="lede">
+        三天田野的产出，沉淀为七种形式的成果。本页同时标注两套数据口径：项目田野采集总量与本站精选收录量，二者不混用。
+      </p>
+    </div>
+  </header>
+
+  <!-- 数据概览：两套口径分开呈现 -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="stats-panel reveal">
+        <div class="stats-block">
+          <h2>网站收录与内容来源</h2>
+          <p class="stats-note">前三项为本站公开条目；完整转写不发布，仅公开经校对的精选引语</p>
+          <div class="stat-row">
+            {siteStats.map((s) => (
+              <div class="stat"><span class="stat-num">{s.num}</span><span class="stat-label">{s.label}</span></div>
+            ))}
+          </div>
+        </div>
+        <div class="stats-block stats-block--muted">
+          <h2>项目田野采集总量</h2>
+          <p class="stats-note">项目报告口径，仅作背景（以最终素材总账为准）</p>
+          <div class="stat-row">
+            {fieldStats.map((s) => (
+              <div class="stat"><span class="stat-num">{s.num}</span><span class="stat-label">{s.label}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 纪实视频 -->
+  {perfVideo && (
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">纪实影像 · FILM</p>
+          <h2>《三英战吕布》演武堂现场</h2>
+          <p class="lede">13 段处理后视频的代表片段。全部影像条目见<a href="/archive/media">影像档案</a>。</p>
+        </div>
+        <div class="feature-video reveal">
+          <VideoCard
+            src={perfVideo.data.src}
+            poster={perfVideo.data.poster}
+            title={perfVideo.data.title}
+            summary={perfVideo.data.summary}
+            durationSec={perfVideo.data.durationSec}
+            categoryLabel={perfVideo.data.categoryLabel}
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 成果清单 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">成果清单 · DELIVERABLES</p>
+        <h2>七种形式的成果</h2>
+      </div>
+      <div class="outcome-list">
+        {
+          outcomes.map(async (o) => {
+            const { Content } = await render(o);
+            return (
+              <article class="outcome-row reveal">
+                <div class="outcome-head">
+                  <h3>{o.data.title}</h3>
+                  {o.data.stat && <span class="outcome-stat">{o.data.stat}</span>}
+                </div>
+                <p class="outcome-summary">{o.data.summary}</p>
+                <div class="outcome-body prose">
+                  <Content />
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 质性收获与反思 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">质性收获 · REFLECTION</p>
+        <h2>除了数字，田野还留下了什么</h2>
+      </div>
+      <div class="reflection-grid">
+        <article class="reflection-item reveal">
+          <h3>乡土非遗的生命力，扎根于民间热爱</h3>
+          <p>
+            长顺地戏能延续至今，离不开老面具匠人、老艺人与农民剧团管理者不计条件的付出。乡村文化振兴不只有政策推动，普通乡土民众自发的守护同样不可替代——这种"自下而上"的文化自觉，是非遗保护最深厚的土壤。
+          </p>
+        </article>
+        <article class="reflection-item reveal">
+          <h3>数字化是破解传承困境的可行路径</h3>
+          <p>
+            口述史与影像把活态传承转化为可保存、可传播、可研究的数字资产，既是对濒危技艺的抢救性记录，也是扩大地戏影响力、吸引青年关注的重要途径。
+          </p>
+        </article>
+        <article class="reflection-item reveal">
+          <h3>青年参与，需要制度化的通道</h3>
+          <p>
+            "地戏进校园"虽初见成效，却仍缺持续性与深度。我们建议把短期调研转化为长期陪伴，通过"非遗传承 + 高校实践"的长效机制，让青年成为非遗传承的参与者而非旁观者。
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 继续的行动 -->
+  <section class="section">
+    <div class="container--narrow prose reveal">
+      <h2>把田野带回家</h2>
+      <p>
+        三天的田野只是一个起点。我们正在制作一支 3 至 5 分钟的宣传视频，以"一出地戏如何被数字记住"为叙事主线，串起田野采集、数字建档与文化传播的全过程；同时持续完善本站这一数字档案，让藏在村寨、面具与唱腔里的文化记忆被更完整、规范地保存与传播。
+      </p>
+    </div>
+  </section>
+
+  <!-- 实物影像 -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">实物档案 · OBJECTS</p>
+        <h2>剧团的荣誉与家底</h2>
+      </div>
+      <div class="object-grid">
+        <Figure src="outcomes/troupe-honors.jpg" alt="长顺农民剧团荣誉墙" caption="剧团荣誉墙（2026-08-05，马路乡）" class="reveal" />
+        <Figure src="outcomes/troupe-weapons.jpg" alt="剧团存放地戏兵器的武器架" caption="剧团武器架（2026-08-05，马路乡）" class="reveal" />
+        <Figure src="outcomes/repertoire-cover.jpg" alt="地戏曲目手抄本封面" caption="地戏曲目手抄本封面（2026-08-05，马路乡）" class="reveal" />
+        <Figure src="outcomes/repertoire-content.jpg" alt="地戏曲目手抄本内页" caption="地戏曲目手抄本内页（2026-08-05，马路乡）" class="reveal" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 学院展示说明 -->
+  <section class="section">
+    <div class="container--narrow prose reveal">
+      <h2>展示与使用说明</h2>
+      <p>
+        本站为北京邮电大学「邮你前行-地戏新生」社会实践项目的成果展示网站，用于学院成果展示与结项答辩。本站所使用的采访、肖像和影像素材均已获得项目展示所需授权，仅用于本项目成果展示与非遗文化传播；未经许可，不得下载、转载或用于商业用途。
+      </p>
+      <p>
+        完整采访视频、转写稿原文与内部许可材料属内部数字档案，不对外发布。如需进一步了解项目，请联系：<span class="meta">2025211655@bupt.cn</span>。
+      </p>
+      <p><a class="btn" href="/archive">进入数字档案</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .stats-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-l);
+  }
+
+  .stats-block {
+    border: 1px solid var(--line);
+    border-top: 1px solid var(--accent);
+    padding: var(--space-m);
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+
+  .stats-block--muted {
+    border-top-color: var(--ink-soft);
+    background: var(--bg-alt);
+  }
+
+  .stats-block h2 {
+    font-size: var(--fs-h3);
+    margin-bottom: 0.2em;
+  }
+
+  .stats-note {
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-m);
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: var(--space-m);
+  }
+
+  .stats-block--muted .stat-num {
+    color: var(--ink-soft);
+    font-size: clamp(1.7rem, 3vw + 0.5rem, 2.4rem);
+  }
+
+  .feature-video {
+    max-width: 860px;
+  }
+
+  .outcome-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+
+  .outcome-row {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-m);
+    display: grid;
+    grid-template-columns: minmax(220px, 0.5fr) 1fr;
+    gap: 0.4em var(--space-xl);
+  }
+
+  .outcome-head h3 {
+    font-size: var(--fs-h3);
+    margin-bottom: 0.2em;
+  }
+
+  .outcome-stat {
+    display: inline-block;
+    font-size: var(--fs-meta);
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+    padding: 0.2em 0.8em;
+    border-radius: 999px;
+  }
+
+  .outcome-summary {
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 0.4em;
+  }
+
+  .outcome-body p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+
+  .object-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-l);
+  }
+
+  .reflection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-l);
+  }
+
+  .reflection-item {
+    border-top: 1px solid var(--accent);
+    padding-top: var(--space-m);
+  }
+
+  .reflection-item h3 {
+    font-size: var(--fs-h3);
+  }
+
+  .reflection-item p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .stats-panel,
+    .object-grid,
+    .outcome-row,
+    .reflection-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

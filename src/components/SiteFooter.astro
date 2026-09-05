@@ -1,0 +1,95 @@
+---
+const year = 2026;
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <p class="footer-title">邮你前行 · 地戏新生</p>
+      <p class="footer-sub">贵州长顺县地戏非遗数字化保护田野实践</p>
+      <p class="footer-note">北京邮电大学社会实践团 · 2026 年暑期</p>
+    </div>
+    <nav class="footer-nav" aria-label="页脚导航">
+      <a href="/fieldwork">项目实践</a>
+      <a href="/people">田野人物</a>
+      <a href="/results">成果展示</a>
+      <a href="/archive">数字档案</a>
+      <a href="/about">关于项目</a>
+    </nav>
+    <div class="footer-legal">
+      <p>
+        本站采访、肖像与影像素材均已获得项目展示所需授权，仅用于北京邮电大学「邮你前行-地戏新生」
+        社会实践项目成果展示与非遗文化传播。未经许可，不得下载、转载或用于商业用途。
+      </p>
+      <p class="meta">联系邮箱：2025211655@bupt.cn ｜ © {year} 邮你前行-地戏新生项目组</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-xxl);
+    border-top: 1px solid var(--line);
+    background: var(--bg-alt);
+    padding: var(--space-l) 0 var(--space-m);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr 1.4fr;
+    gap: var(--space-l);
+  }
+
+  .footer-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.2em;
+  }
+
+  .footer-sub {
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+    margin: 0 0 0.6em;
+  }
+
+  .footer-note {
+    color: var(--ink-soft);
+    font-size: var(--fs-meta);
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .footer-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: var(--fs-small);
+    letter-spacing: 0.08em;
+    padding: 0.2em 0;
+  }
+
+  .footer-nav a:hover {
+    color: var(--accent);
+  }
+
+  .footer-legal p {
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin: 0 0 0.8em;
+  }
+
+  @media (max-width: 860px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+</style>

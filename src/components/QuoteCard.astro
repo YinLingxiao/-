@@ -1,0 +1,65 @@
+---
+interface Props {
+  quote: string;
+  name: string;
+  role?: string;
+  href?: string;
+}
+
+const { quote, name, role, href } = Astro.props;
+---
+
+<blockquote class="quote-card reveal">
+  <p class="quote-text">「{quote}」</p>
+  <footer class="quote-meta">
+    <span class="quote-name">{name}</span>
+    {role && <span class="quote-role">{role}</span>}
+    {href && <a class="quote-link" href={href}>阅读人物故事 →</a>}
+  </footer>
+</blockquote>
+
+<style>
+  .quote-card {
+    margin: 0;
+    padding: var(--space-m);
+    background: var(--bg-alt);
+    border-top: 1px solid var(--accent);
+    border-radius: 0 0 var(--radius) var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .quote-text {
+    font-family: var(--font-serif);
+    font-size: 1.12rem;
+    line-height: 1.9;
+    margin: 0;
+  }
+
+  .quote-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6em;
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  .quote-name {
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+  }
+
+  .quote-role {
+    letter-spacing: 0.06em;
+  }
+
+  .quote-link {
+    margin-left: auto;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+</style>

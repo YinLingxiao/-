@@ -1,0 +1,151 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { img } from '../../utils/images';
+
+const people = (await getCollection('people')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="田野人物"
+  description="邮你前行-地戏新生实践团在贵州长顺与天龙古镇采访的七位田野人物：手艺人、剧团团长、老中青演员、讲解员与学徒。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">田野人物 · PEOPLE</p>
+      <h1>他们戴着面具，也托着面具</h1>
+      <p class="lede">
+        地戏的传承链条由具体的人组成。三天里，我们采访了七位人物——从六百年手艺的守护者，到刚刚开始学戏的少年。
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container people-list">
+      {
+        people.map((p, index) => {
+          const photo = (
+            <a class="person-photo" href={`/people/${p.data.slug}`} aria-label={`查看${p.data.name}的人物档案`}>
+              {p.data.portrait && (
+                <Picture
+                  src={img(p.data.portrait)}
+                  alt={p.data.portraitAlt ?? p.data.name}
+                  widths={[360, 640]}
+                  sizes="(max-width: 640px) 100vw, 300px"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </a>
+          );
+          const info = (
+            <div class="person-info">
+              <h2><a href={`/people/${p.data.slug}`}>{p.data.name}</a></h2>
+              <p class="person-role">{p.data.role}</p>
+              <p class="person-relation">{p.data.relationToDixi}</p>
+              {p.data.quotes[0] && (
+                <blockquote class="person-quote">「{p.data.quotes[0].text}」</blockquote>
+              )}
+              <a class="link-more" href={`/people/${p.data.slug}`}>阅读人物故事</a>
+            </div>
+          );
+          return (
+            <article class="person-row reveal">
+              {index % 2 === 0 ? <>{photo}{info}</> : <>{info}{photo}</>}
+            </article>
+          );
+        })
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .people-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .person-row {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: var(--space-l);
+    align-items: start;
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-l);
+  }
+
+  .person-row:nth-child(even) {
+    grid-template-columns: 1fr 300px;
+  }
+
+  .person-photo img {
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  .person-info h2 {
+    font-size: var(--fs-h2);
+    margin-bottom: 0.1em;
+  }
+
+  .person-info h2 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .person-info h2 a:hover {
+    color: var(--accent);
+  }
+
+  .person-role {
+    color: var(--accent);
+    font-size: var(--fs-small);
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    margin-bottom: 0.8em;
+  }
+
+  .person-relation {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .person-quote {
+    font-family: var(--font-serif);
+    font-size: 1.08rem;
+    line-height: 1.85;
+    border-left: 1px solid var(--accent);
+    padding-left: 1em;
+    margin: 1em 0;
+    max-width: 52ch;
+  }
+
+  @media (max-width: 640px) {
+    .person-row,
+    .person-row:nth-child(even) {
+      grid-template-columns: 1fr;
+    }
+    .person-photo {
+      max-width: 340px;
+    }
+  }
+</style>

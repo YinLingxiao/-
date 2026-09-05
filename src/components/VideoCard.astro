@@ -1,0 +1,104 @@
+---
+import { getImage } from 'astro:assets';
+import { img } from '../utils/images';
+
+interface Props {
+  /** media 条目字段 */
+  src: string;
+  poster: string;
+  title: string;
+  summary?: string;
+  durationSec?: number;
+  categoryLabel?: string;
+}
+
+const { src, poster, title, summary, durationSec, categoryLabel } = Astro.props;
+
+// poster 经 Astro 优化为 webp
+const optimizedPoster = await getImage({
+  src: img(poster),
+  width: 1280,
+  format: 'webp',
+});
+
+function fmt(sec?: number) {
+  if (!sec) return '';
+  const m = Math.floor(sec / 60);
+  const s = Math.round(sec % 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+---
+
+<figure class="video-card reveal">
+  <div class="video-wrap">
+    <!-- 不自动播放、不自动出声；preload=none 实现懒加载 -->
+    <video controls preload="none" poster={optimizedPoster.src} playsinline>
+      <source src={src} type="video/mp4" />
+      <p>您的浏览器不支持内嵌视频播放。</p>
+    </video>
+    {durationSec && <span class="video-duration" aria-hidden="true">{fmt(durationSec)}</span>}
+  </div>
+  <figcaption>
+    {categoryLabel && <span class="video-cat">{categoryLabel}</span>}
+    <span class="video-title">{title}</span>
+    {summary && <span class="video-summary">{summary}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .video-card {
+    margin: 0;
+  }
+
+  .video-wrap {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #111;
+  }
+
+  video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+  }
+
+  .video-duration {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    background: rgba(26, 26, 23, 0.75);
+    color: var(--bg);
+    font-size: var(--fs-meta);
+    padding: 0.15em 0.6em;
+    border-radius: 2px;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
+
+  figcaption {
+    margin-top: 0.7em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .video-cat {
+    font-size: var(--fs-meta);
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+
+  .video-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .video-summary {
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+</style>

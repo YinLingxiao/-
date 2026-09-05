@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getImage } from 'astro:assets';
+import { img } from '../utils/images';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 页面专属 OG 图（可选） */
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+const siteName = '邮你前行 · 地戏新生';
+const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
+const site = Astro.site ?? new URL('https://example.edu.cn');
+const canonical = new URL(Astro.url.pathname, site);
+const defaultOgImage = await getImage({
+  src: img('hero/yanwutang-closeup.jpg'),
+  width: 1200,
+  height: 630,
+  format: 'webp',
+  fit: 'cover',
+});
+const absoluteOgImage = new URL(ogImage ?? defaultOgImage.src, site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 仅学院展示：不期望被搜索引擎收录 -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content={absoluteOgImage} />
+
+    <link rel="icon" href="/brand-seal.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      // 滚动渐入（尊重 prefers-reduced-motion）
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+        );
+        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      } else {
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

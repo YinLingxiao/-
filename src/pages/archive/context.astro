@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+---
+
+<Base
+  title="地戏知识"
+  description="地戏概述、明代军屯历史、面具服装兵器、表演方式、剧目角色与屯堡文化环境——来自田野采访与公开文献的背景整理。"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="eyebrow">数字档案 · CONTEXT</p>
+      <h1>认识地戏</h1>
+      <p class="lede">
+        以下内容综合本次田野采访中受访者的讲述与公开文献整理，作为浏览面具图鉴与影像档案的背景。受访者讲述处已注明来源。
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--tight">
+    <div class="container--narrow prose">
+      <h2>地戏概述</h2>
+      <p>
+        地戏是流行于贵州安顺及周边屯堡地区的汉族戏曲，因"平地围场而演、不搭戏台"得名。演员头戴木刻面具（当地称"脸子"）、背扎靠旗、手持木制兵器，以武打场面和方言唱腔演绎历史演义故事，已被列入国家级非物质文化遗产名录。
+      </p>
+      <blockquote class="pull-quote">
+        不搭戏台，就在坝子里面跳。穿好服装，每个人戴好每个人的面具。唱的是我们贵州黔南这边的方言，我们就听得懂。
+        <footer>2026-08-04 燕世忠采访（转写稿 04，已校对）</footer>
+      </blockquote>
+
+      <h2>历史背景：从明代军屯走来</h2>
+      <p>
+        地戏源于明代军屯文化。明初"调北征南""调北填南"，江淮将士随军入黔、屯田戍守，后裔聚成屯堡村落。随军的家乡戏曲与武备操练相融合，逐渐演变为以征战故事为题材的地戏。
+      </p>
+      <blockquote class="pull-quote">
+        我们江西是随朱元璋随军过来的，打仗打到这边来，就留在这个地方，一扎根就几百年了。
+        <footer>2026-08-04 燕世忠采访（转写稿 02，已校对）</footer>
+      </blockquote>
+      <p>
+        青年学徒谈及学戏初衷时也说："我们是'调北填南'过来这边的，听他们讲薛仁贵征东、征西这些故事——讲句不好听的话，就是怀念先辈嘛。"（2026-08-06 学徒采访，转写稿 14，已校对）
+      </p>
+
+      <h2>面具、服装与兵器</h2>
+      <p>
+        面具是地戏的灵魂。面具以木雕刻、彩绘而成，角色的忠奸、文武、性格都在眉眼与纹饰里：忠臣端正、霸主威严，龙凤云饰各有讲究。面具佩戴于额上，演员从面具上沿看出去，鼻嘴以纱布遮盖；保存时用白纸包裹，防摩擦、防潮、防虫（2026-08-05 金老伍面具讲解，转写稿 09/10，已校对）。
+      </p>
+      <p>
+        服装室中另存有戏服与木制兵器。角色分配与演员自身的形象气质相关——金老伍说自己身材偏瘦、适合跳文将，"像徐茂公那样的军师"；伍天锡一类凶猛角色，则要选"个子大一点、宽一点"的演员（转写稿 11，已校对）。
+      </p>
+
+      <h2>表演方式</h2>
+      <p>
+        地戏过去多在春节或农闲时演出：鼓声一响，村民抬着凳子围成场子，演员在坝子里开跳。出征、拜将、上阵，都有规范的言行身段；唱调用方言，唱的就是一个个故事情节（2026-08-04 燕世忠采访，转写稿 04，已校对）。如今在天龙古镇演武堂，地戏每天为游客上演，剧目每日更换。
+      </p>
+
+      <h2>剧目与角色</h2>
+      <p>
+        地戏剧目取自历史演义，重武打、多征战：三国戏有《三英战吕布》，另有薛仁贵征东、征西等。采访中出现的角色包括关羽、张飞、赵云、曹操、单雄信、罗成、秦叔宝、伍云召、伍天锡、徐茂公等。在金老伍看来，地戏传递的是"保家卫国、争当英雄"的情怀："因为崇拜这些人物，我们这个地方的人，人人都想效仿。"（转写稿 07，已校对）
+      </p>
+
+      <h2>屯堡文化环境</h2>
+      <p>
+        地戏生长在屯堡村落的空间里：长顺广顺的古城门、天龙古镇的石刻与演武堂，都是这门戏曲的"舞台背景"。本站的村寨影像记录了这些空间，见<a href="/fieldwork">项目实践</a>。
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container context-photos">
+      <Figure src="villages/guangshun-east-gate.jpg" alt="长顺县广顺镇东城门" caption="广顺东城门（2026-08-04）" class="reveal" />
+      <Figure src="villages/tianlong-name.jpg" alt="天龙屯堡名称石刻" caption="天龙屯堡名称石刻（2026-08-06）" class="reveal" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--space-xl) 0 var(--space-l);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: var(--fs-h1);
+  }
+
+  .page-head .lede {
+    color: var(--ink-soft);
+    max-width: var(--measure);
+    font-size: 1.05rem;
+  }
+
+  .prose h2 {
+    font-size: var(--fs-h2);
+    margin-top: 1.4em;
+  }
+
+  .context-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-l);
+  }
+
+  @media (max-width: 640px) {
+    .context-photos {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

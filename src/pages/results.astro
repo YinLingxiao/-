@@ -2,16 +2,18 @@
 import Base from '../layouts/Base.astro';
 import VideoCard from '../components/VideoCard.astro';
 import Figure from '../components/Figure.astro';
+import { isPublicEntry } from '../utils/content';
 import { getCollection, render } from 'astro:content';
 
-const outcomes = (await getCollection('outcomes')).sort((a, b) => a.data.order - b.data.order);
-const media = await getCollection('media');
+const outcomes = (await getCollection('outcomes', isPublicEntry)).sort((a, b) => a.data.order - b.data.order);
+const media = await getCollection('media', isPublicEntry);
+const masks = await getCollection('masks', isPublicEntry);
 const perfVideo = media.find((m) => m.data.slug === '13-performance-sanying');
 
 const siteStats = [
   { num: '34', label: '精选照片' },
-  { num: '47', label: '面具记录照片' },
-  { num: '13', label: '处理后视频' },
+  { num: String(masks.length), label: '面具记录照片' },
+  { num: String(media.length), label: '处理后视频' },
   { num: '13', label: '内部转写来源' },
 ];
 
@@ -24,7 +26,7 @@ const fieldStats = [
 
 <Base
   title="成果展示"
-  description="邮你前行-地戏新生项目成果：实践总结报告、纪实影像、34 张精选照片、13 份采访转写、47 张面具数字图鉴、专题网站与素材归档。"
+  description={`邮你前行-地戏新生项目成果：实践总结报告、纪实影像、34 张精选照片、13 份内部采访转写来源、${masks.length} 张面具数字图鉴、专题网站与素材归档。`}
 >
   <header class="page-head">
     <div class="container">
@@ -69,7 +71,7 @@ const fieldStats = [
         <div class="section-head reveal">
           <p class="eyebrow">纪实影像 · FILM</p>
           <h2>《三英战吕布》演武堂现场</h2>
-          <p class="lede">13 段处理后视频的代表片段。全部影像条目见<a href="/archive/media">影像档案</a>。</p>
+          <p class="lede">{media.length} 段处理后视频的代表片段。全部影像条目见<a href="/archive/media">影像档案</a>。</p>
         </div>
         <div class="feature-video reveal">
           <VideoCard

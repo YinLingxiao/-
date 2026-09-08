@@ -27,7 +27,7 @@ function isActive(href: string) {
     </a>
 
     <nav class="site-nav" aria-label="主导航">
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-list">
         <span class="nav-toggle-bar" aria-hidden="true"></span>
         <span class="sr-only">菜单</span>
       </button>
@@ -178,16 +178,16 @@ function isActive(href: string) {
     white-space: nowrap;
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
     .brand-text small {
       display: none;
     }
 
-    :global(html.js) .nav-toggle {
+    .site-nav[data-ready] .nav-toggle {
       display: block;
     }
 
-    :global(html.js) .site-nav ul {
+    .site-nav[data-ready] ul {
       display: none;
       position: absolute;
       top: 100%;
@@ -198,23 +198,25 @@ function isActive(href: string) {
       background: var(--bg);
       border-bottom: 1px solid var(--line);
       padding: 0.5rem 1.25rem 1rem;
+      max-height: calc(100dvh - 68px);
+      overflow-y: auto;
     }
 
-    :global(html.js) .site-nav ul[data-open='true'] {
+    .site-nav[data-ready] ul[data-open='true'] {
       display: flex;
     }
 
-    :global(html:not(.js)) .header-inner {
+    .header-inner:has(.site-nav:not([data-ready])) {
       align-items: flex-start;
       flex-direction: column;
       padding-block: 0.75rem;
     }
 
-    :global(html:not(.js)) .site-nav {
+    .site-nav:not([data-ready]) {
       width: 100%;
     }
 
-    :global(html:not(.js)) .site-nav ul {
+    .site-nav:not([data-ready]) ul {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0;
@@ -235,9 +237,31 @@ function isActive(href: string) {
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
   const list = document.querySelector<HTMLUListElement>('#nav-list');
-  toggle?.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!open));
-    list?.setAttribute('data-open', String(!open));
-  });
+  const navEl = document.querySelector<HTMLElement>('.site-nav');
+  if (toggle && list && navEl) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+      list.dataset.open = String(open);
+    };
+    setOpen(false);
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !navEl.contains(event.target)) setOpen(false);
+    });
+    navEl.addEventListener('focusout', (event) => {
+      if (event.relatedTarget instanceof Node && !navEl.contains(event.relatedTarget)) setOpen(false);
+    });
+    list.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
+    });
+    window.matchMedia('(max-width: 1024px)').addEventListener('change', () => setOpen(false));
+    navEl.dataset.ready = 'true';
+  }
 </script>

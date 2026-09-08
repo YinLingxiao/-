@@ -4,15 +4,16 @@ import Figure from '../components/Figure.astro';
 import QuoteCard from '../components/QuoteCard.astro';
 import VideoCard from '../components/VideoCard.astro';
 import { Picture } from 'astro:assets';
+import { isPublicEntry } from '../utils/content';
 import { getCollection } from 'astro:content';
 import { img } from '../utils/images';
 
-const people = (await getCollection('people')).sort((a, b) => a.data.order - b.data.order);
+const people = (await getCollection('people', isPublicEntry)).sort((a, b) => a.data.order - b.data.order);
 const featuredQuotes = people.filter((p) => p.data.quotes.length > 0).slice(0, 3);
-const masks = await getCollection('masks');
+const masks = await getCollection('masks', isPublicEntry);
 const featuredMasks = masks.filter((m) => m.data.featured).slice(0, 8);
-const fieldwork = (await getCollection('fieldwork')).sort((a, b) => a.data.order - b.data.order);
-const media = await getCollection('media');
+const fieldwork = (await getCollection('fieldwork', isPublicEntry)).sort((a, b) => a.data.order - b.data.order);
+const media = await getCollection('media', isPublicEntry);
 const heroVideo = media.find((m) => m.data.slug === '13-performance-sanying');
 
 const siteDesc =
@@ -26,9 +27,11 @@ const siteDesc =
       <Picture
         src={img('hero/yanwutang-closeup.jpg')}
         alt="演武堂地戏演员面具特写"
+        width={2400}
         widths={[960, 1440, 2000, 2400]}
         sizes="100vw"
-        formats={['avif', 'webp']}
+        formats={['avif']}
+        fallbackFormat="webp"
         loading="eager"
         fetchpriority="high"
         decoding="async"
@@ -153,9 +156,11 @@ const siteDesc =
                   <Picture
                     src={img(entry.data.photos[0].src)}
                     alt={entry.data.photos[0].alt}
+                    width={800}
                     widths={[480, 800]}
                     sizes="(max-width: 860px) 100vw, 320px"
-                    formats={['avif', 'webp']}
+                    formats={['avif']}
+                    fallbackFormat="webp"
                     loading="lazy"
                     decoding="async"
                   />
@@ -202,8 +207,8 @@ const siteDesc =
       </div>
       <div class="stat-row reveal">
         <div class="stat"><span class="stat-num">34</span><span class="stat-label">精选照片</span></div>
-        <div class="stat"><span class="stat-num">47</span><span class="stat-label">面具记录照片</span></div>
-        <div class="stat"><span class="stat-num">13</span><span class="stat-label">处理后视频</span></div>
+        <div class="stat"><span class="stat-num">{masks.length}</span><span class="stat-label">面具记录照片</span></div>
+        <div class="stat"><span class="stat-num">{media.length}</span><span class="stat-label">处理后视频</span></div>
         <div class="stat"><span class="stat-num">13</span><span class="stat-label">内部转写来源</span></div>
       </div>
       {heroVideo && (
@@ -234,22 +239,25 @@ const siteDesc =
         {
           featuredMasks.map((m) => (
             <li class="reveal">
-              <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看面具档案 ${m.data.id}`}>
+              <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看${m.data.role}面具档案 ${m.data.id}`}>
                 <Picture
                   src={img(m.data.image)}
                   alt={m.data.alt}
+                  width={560}
                   widths={[320, 560]}
                   sizes="(max-width: 640px) 45vw, 240px"
-                  formats={['avif', 'webp']}
+                  formats={['avif']}
+                  fallbackFormat="webp"
                   loading="lazy"
                   decoding="async"
                 />
-              </a>
+              <span class="mask-caption">{m.data.role}<small>{m.data.id}</small></span>
+                </a>
             </li>
           ))
         }
       </ul>
-      <p class="section-more reveal"><a class="link-more" href="/archive/masks">进入面具数字图鉴（47 张）</a></p>
+      <p class="section-more reveal"><a class="link-more" href="/archive/masks">进入面具数字图鉴（{masks.length} 张）</a></p>
     </div>
   </section>
 

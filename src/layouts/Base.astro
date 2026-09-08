@@ -31,7 +31,6 @@ const absoluteOgImage = new URL(ogImage ?? defaultOgImage.src, site);
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- 仅学院展示：不期望被搜索引擎收录 -->
     <meta name="robots" content="noindex, nofollow" />
@@ -51,7 +50,7 @@ const absoluteOgImage = new URL(ogImage ?? defaultOgImage.src, site);
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
     <SiteHeader />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <SiteFooter />
@@ -70,7 +69,11 @@ const absoluteOgImage = new URL(ogImage ?? defaultOgImage.src, site);
           },
           { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
         );
-        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+        document.querySelectorAll('.reveal').forEach((el) => {
+          // Enable animation only after its observer is ready; a failed script leaves content readable.
+          el.classList.add('reveal-ready');
+          io.observe(el);
+        });
       } else {
         document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
       }

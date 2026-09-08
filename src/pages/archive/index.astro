@@ -1,18 +1,19 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { Picture } from 'astro:assets';
+import { isPublicEntry } from '../../utils/content';
 import { getCollection } from 'astro:content';
 import { img } from '../../utils/images';
 
-const masks = await getCollection('masks');
-const media = await getCollection('media');
+const masks = await getCollection('masks', isPublicEntry);
+const media = await getCollection('media', isPublicEntry);
 const wallCount = masks.filter((m) => m.data.set === 'wall').length;
 const workshopCount = masks.filter((m) => m.data.set === 'workshop').length;
 ---
 
 <Base
   title="数字档案"
-  description="邮你前行-地戏新生数字档案：47 张面具数字图鉴、13 段影像条目与地戏知识背景。"
+  description={`邮你前行-地戏新生数字档案：${masks.length} 张面具数字图鉴、${media.length} 段影像条目与地戏知识背景。`}
 >
   <header class="page-head">
     <div class="container">
@@ -30,10 +31,12 @@ const workshopCount = masks.filter((m) => m.data.set === 'workshop').length;
         <div class="archive-card-media">
           <Picture
             src={img('masks/mask-8530.jpg')}
-            alt="演武堂墙面陈列地戏面具"
+            alt="演武堂墙面陈列哈迷蚩地戏面具（编号 8530）"
+            width={800}
             widths={[480, 800]}
             sizes="(max-width: 860px) 100vw, 360px"
-            formats={['avif', 'webp']}
+            formats={['avif']}
+            fallbackFormat="webp"
             loading="lazy"
             decoding="async"
           />
@@ -50,9 +53,11 @@ const workshopCount = masks.filter((m) => m.data.set === 'workshop').length;
           <Picture
             src={img('performance/yanwutang-scene.jpg')}
             alt="演武堂地戏表演现场"
+            width={800}
             widths={[480, 800]}
             sizes="(max-width: 860px) 100vw, 360px"
-            formats={['avif', 'webp']}
+            formats={['avif']}
+            fallbackFormat="webp"
             loading="lazy"
             decoding="async"
           />
@@ -69,9 +74,11 @@ const workshopCount = masks.filter((m) => m.data.set === 'workshop').length;
           <Picture
             src={img('villages/tianlong-stone-1.jpg')}
             alt="天龙古镇石刻地标"
+            width={800}
             widths={[480, 800]}
             sizes="(max-width: 860px) 100vw, 360px"
-            formats={['avif', 'webp']}
+            formats={['avif']}
+            fallbackFormat="webp"
             loading="lazy"
             decoding="async"
           />

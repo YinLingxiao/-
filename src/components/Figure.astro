@@ -30,9 +30,11 @@ const meta = img(src);
   <Picture
     src={meta}
     alt={alt}
+    width={Math.max(...widths)}
     widths={widths}
     sizes={sizes}
-    formats={['avif', 'webp']}
+    formats={['avif']}
+    fallbackFormat="webp"
     loading={eager ? 'eager' : 'lazy'}
     fetchpriority={eager ? 'high' : 'auto'}
     decoding="async"

@@ -2,10 +2,11 @@
 import Base from '../../../layouts/Base.astro';
 import Lightbox from '../../../components/Lightbox.astro';
 import { Picture, getImage } from 'astro:assets';
+import { isPublicEntry } from '../../../utils/content';
 import { getCollection } from 'astro:content';
 import { img } from '../../../utils/images';
 
-const masks = (await getCollection('masks')).sort((a, b) => a.data.index - b.data.index);
+const masks = (await getCollection('masks', isPublicEntry)).sort((a, b) => a.data.index - b.data.index);
 
 // 为灯箱生成大图 URL
 const masksWithLarge = await Promise.all(
@@ -28,7 +29,7 @@ const workshop = masksWithLarge.filter((m) => m.data.set === 'workshop');
       <p class="eyebrow">数字档案 · MASKS</p>
       <h1>面具数字图鉴</h1>
       <p class="lede">
-        共 {masks.length} 张记录照片。面具保留石墙与木板的陈列背景——它们属于那个空间，而非白底样本。角色身份未经受访者确认的一律标注「待考证」。
+        共 {masks.length} 张已命名面具记录。面具保留石墙与木板的陈列背景——它们属于那个空间，而非白底样本。角色名称依据项目补充名单整理。
       </p>
     </div>
   </header>
@@ -54,22 +55,24 @@ const workshop = masksWithLarge.filter((m) => m.data.set === 'workshop');
                 data-lightbox
                 data-lightbox-src={m.largeSrc}
                 data-lightbox-alt={m.data.alt}
-                data-lightbox-caption={`${m.data.setLabel} ｜ ${m.data.captureDate} ｜ ${m.data.place}`}
+                data-lightbox-caption={`${m.data.role} · ${m.data.id} ｜ ${m.data.setLabel} ｜ ${m.data.captureDate} ｜ ${m.data.place}`}
                 aria-label={`放大查看：${m.data.alt}`}
               >
                 <Picture
                   src={img(m.data.image)}
                   alt={m.data.alt}
+                  width={520}
                   widths={[300, 520]}
                   sizes="(max-width: 640px) 45vw, 260px"
-                  formats={['avif', 'webp']}
+                  formats={['avif']}
+                  fallbackFormat="webp"
                   loading="lazy"
                   decoding="async"
                 />
               </button>
               <div class="mask-cell-meta">
-                <span class="mask-id">{m.data.id}</span>
-                <a href={`/archive/masks/${m.data.slug}`}>详情 →</a>
+                <span class="mask-caption">{m.data.role}<small>{m.data.id}</small></span>
+                <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看${m.data.role}面具档案 ${m.data.id}`}>详情 →</a>
               </div>
             </li>
           ))

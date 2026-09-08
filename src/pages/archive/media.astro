@@ -1,28 +1,30 @@
 ---
 import Base from '../../layouts/Base.astro';
 import VideoCard from '../../components/VideoCard.astro';
+import { isPublicEntry } from '../../utils/content';
 import { getCollection } from 'astro:content';
 
-const media = await getCollection('media');
+const media = await getCollection('media', isPublicEntry);
 
 const groups = [
   { key: 'performance', label: '地戏表演', desc: '演武堂现场演出实录' },
   { key: 'mask', label: '面具讲解', desc: '面具的佩戴、保存与角色讲究' },
   { key: 'interview', label: '人物采访', desc: '口述史采访片段' },
   { key: 'workshop', label: '工坊环境', desc: '手艺人工作空间记录' },
+  { key: 'village', label: '村寨空间', desc: '村寨与屯堡空间影像' },
 ] as const;
 ---
 
 <Base
   title="影像档案"
-  description="邮你前行-地戏新生影像档案：13 段处理后视频的代表性短片，涵盖地戏表演、面具讲解、人物采访与工坊环境。"
+  description={`邮你前行-地戏新生影像档案：${media.length} 段处理后视频的代表性短片，涵盖地戏表演、面具讲解、人物采访与工坊环境。`}
 >
   <header class="page-head">
     <div class="container">
       <p class="eyebrow">数字档案 · MEDIA</p>
       <h1>影像档案</h1>
       <p class="lede">
-        13 段处理后视频按故事线编号（01–13），本站呈现每段的代表性压缩短片（20–60 秒，1080p）。完整原始视频作为内部数字档案保存，不对外发布。
+        当前公开 {media.length} 段处理后视频，保留故事线编号。本站呈现每段的代表性压缩短片（20–60 秒，1080p）。完整原始视频作为内部数字档案保存，不对外发布。
       </p>
     </div>
   </header>

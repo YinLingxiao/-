@@ -2,20 +2,21 @@
 import Base from '../../../layouts/Base.astro';
 import Figure from '../../../components/Figure.astro';
 import VideoCard from '../../../components/VideoCard.astro';
+import { isPublicEntry } from '../../../utils/content';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const masks = await getCollection('masks');
+  const masks = await getCollection('masks', isPublicEntry);
   return masks.map((m) => ({ params: { slug: m.data.slug }, props: { mask: m } }));
 }
 
 const { mask } = Astro.props;
 const { data } = mask;
 
-const allPeople = await getCollection('people');
+const allPeople = await getCollection('people', isPublicEntry);
 const relatedPeople = allPeople.filter((p) => data.relatedPeople.includes(p.data.slug));
 
-const allMedia = await getCollection('media');
+const allMedia = await getCollection('media', isPublicEntry);
 // 工坊实物关联燕世忠口述史；墙面陈列关联面具讲解与演武堂影像
 const relatedMedia =
   data.set === 'workshop'
@@ -23,14 +24,14 @@ const relatedMedia =
     : allMedia.filter((m) => ['09-mask-demo-1', '10-mask-demo-2', '13-performance-sanying'].includes(m.data.slug));
 ---
 
-<Base title={`面具档案 ${data.id}`} description={`${data.alt}。${data.setLabel}，摄于 ${data.captureDate}，${data.place}。`}>
+<Base title={`${data.role} · ${data.id}`} description={`${data.alt}。${data.setLabel}，摄于 ${data.captureDate}，${data.place}。`}>
   <article class="mask-page container">
     <nav class="crumb" aria-label="面包屑">
       <a href="/archive">数字档案</a>
       <span aria-hidden="true"> / </span>
       <a href="/archive/masks">面具数字图鉴</a>
       <span aria-hidden="true"> / </span>
-      <span aria-current="page">{data.id}</span>
+      <span aria-current="page">{data.role} · {data.id}</span>
     </nav>
 
     <div class="mask-layout">
@@ -38,8 +39,9 @@ const relatedMedia =
 
       <div class="mask-info">
         <p class="eyebrow">面具档案 · {data.set === 'wall' ? 'WALL' : 'WORKSHOP'}</p>
-        <h1>{data.id}</h1>
+        <h1>{data.role}</h1>
         <dl class="mask-meta">
+          <dt>档案编号</dt><dd>{data.id}</dd>
           <dt>来源</dt><dd>{data.setLabel}</dd>
           <dt>拍摄时间</dt><dd>{data.captureDate}</dd>
           <dt>拍摄地点</dt><dd>{data.place}</dd>
@@ -53,9 +55,7 @@ const relatedMedia =
               : '此面具为面具雕刻手艺人燕世忠工坊中的实物。燕世忠在采访中讲解了部分面具角色的来历与雕刻讲究。'}
           </p>
           <p class="text-soft">
-            {data.role === '待考证'
-              ? '角色身份需与受访者逐尊核对后方可标注；在确认之前，本条目保留「待考证」。相关讲解见下方影像。'
-              : `角色名「${data.role}」依据现场实体标签记录；后续仍可由受访者复核。相关讲解见下方影像。`}
+            角色名称依据项目补充名单整理。相关讲解见下方影像。
           </p>
         </div>
 

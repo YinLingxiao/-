@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Figure from '../components/Figure.astro';
+import { isPublicEntry } from '../utils/content';
 import { getCollection, render } from 'astro:content';
 
-const entries = (await getCollection('fieldwork')).sort((a, b) => a.data.order - b.data.order);
+const entries = (await getCollection('fieldwork', isPublicEntry)).sort((a, b) => a.data.order - b.data.order);
 
 const methods = [
   {

@@ -4,13 +4,12 @@ import { glob, file } from 'astro/loaders';
 
 /**
  * 数据口径说明：
- * - visibility / consentLevel 为隐私与授权模型字段，本项目默认 public / confirmed，
- *   保留字段以便未来收紧（见 ABOUT 页素材处理原则）。
+ * - visibility / consentLevel 必须显式填写；页面只展示 public / confirmed 条目。
  */
 
 const consent = {
-  visibility: z.enum(['public', 'internal', 'hidden']).default('public'),
-  consentLevel: z.enum(['confirmed', 'pending', 'restricted']).default('confirmed'),
+  visibility: z.enum(['public', 'internal', 'hidden']),
+  consentLevel: z.enum(['confirmed', 'pending', 'restricted']),
 };
 
 /** 田野人物（content：frontmatter + 正文人物故事） */
@@ -41,7 +40,7 @@ const people = defineCollection({
   }),
 });
 
-/** 面具档案（data：单个 JSON 清单，47 条） */
+/** 面具档案（data：单个 JSON 清单，仅收录已命名面具） */
 const masks = defineCollection({
   loader: file('src/content/masks/masks.json'),
   schema: z.object({
@@ -54,7 +53,7 @@ const masks = defineCollection({
     index: z.number(),
     captureDate: z.string(),
     place: z.string(),
-    role: z.string().default('待考证'),
+    role: z.string().trim().min(1).refine((value) => value !== '待考证', '面具必须命名后才能收录'),
     notes: z.string().optional(),
     relatedPeople: z.array(z.string()).default([]),
     featured: z.boolean().default(false),

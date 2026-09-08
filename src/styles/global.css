@@ -4,7 +4,7 @@
    ============================================================ */
 
 :root {
-  /* 色彩 tokens（见 DESIGN.md） */
+  /* 色彩 */
   --bg: #F5F4ED;
   --bg-alt: #EFEDE4;
   --ink: #1A1A17;
@@ -48,6 +48,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -270,6 +271,23 @@ a:hover {
   transform: translateY(-0.35em);
 }
 
+/* ---------- 面具名称 ---------- */
+.mask-caption {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.mask-caption small {
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+}
+
 /* ---------- 引语 ---------- */
 .pull-quote {
   font-family: var(--font-serif);
@@ -315,13 +333,14 @@ a:hover {
   transform: none;
 }
 
-.js .reveal {
+.reveal.reveal-ready {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-.js .reveal.is-visible {
+.reveal.is-visible,
+.reveal:focus-within {
   opacity: 1;
   transform: none;
 }
@@ -330,7 +349,7 @@ a:hover {
   html {
     scroll-behavior: auto;
   }
-  .js .reveal {
+  .reveal.reveal-ready {
     opacity: 1;
     transform: none;
     transition: none;

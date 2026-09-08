@@ -2,11 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import VideoCard from '../../components/VideoCard.astro';
 import { Picture } from 'astro:assets';
+import { isPublicEntry } from '../../utils/content';
 import { getCollection, render } from 'astro:content';
 import { img } from '../../utils/images';
 
 export async function getStaticPaths() {
-  const people = await getCollection('people');
+  const people = await getCollection('people', isPublicEntry);
   return people.map((p) => ({ params: { slug: p.data.slug }, props: { person: p } }));
 }
 
@@ -14,10 +15,10 @@ const { person } = Astro.props;
 const { data } = person;
 const { Content } = await render(person);
 
-const allMedia = await getCollection('media');
+const allMedia = await getCollection('media', isPublicEntry);
 const personVideos = allMedia.filter((m) => data.videos.includes(m.data.slug));
 
-const allMasks = await getCollection('masks');
+const allMasks = await getCollection('masks', isPublicEntry);
 const personMasks = allMasks.filter((m) => data.relatedMasks.includes(m.data.slug));
 ---
 
@@ -30,9 +31,11 @@ const personMasks = allMasks.filter((m) => data.relatedMasks.includes(m.data.slu
           <Picture
             src={img(data.portrait)}
             alt={data.portraitAlt ?? data.name}
+            width={1200}
             widths={[480, 800, 1200]}
             sizes="(max-width: 860px) 100vw, 440px"
-            formats={['avif', 'webp']}
+            formats={['avif']}
+            fallbackFormat="webp"
             loading="eager"
             fetchpriority="high"
             decoding="async"
@@ -107,16 +110,19 @@ const personMasks = allMasks.filter((m) => data.relatedMasks.includes(m.data.slu
           <ul class="mask-mini-grid" role="list">
             {personMasks.map((m) => (
               <li>
-                <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看面具档案 ${m.data.id}`}>
+                <a href={`/archive/masks/${m.data.slug}`} aria-label={`查看${m.data.role}面具档案 ${m.data.id}`}>
                   <Picture
                     src={img(m.data.image)}
                     alt={m.data.alt}
+                    width={480}
                     widths={[280, 480]}
                     sizes="(max-width: 640px) 45vw, 200px"
-                    formats={['avif', 'webp']}
+                    formats={['avif']}
+                    fallbackFormat="webp"
                     loading="lazy"
                     decoding="async"
                   />
+                <span class="mask-caption">{m.data.role}<small>{m.data.id}</small></span>
                 </a>
               </li>
             ))}

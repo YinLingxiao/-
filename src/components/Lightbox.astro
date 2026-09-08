@@ -10,7 +10,7 @@
   <button class="lightbox-prev" type="button" aria-label="上一张">‹</button>
   <figure>
     <img src="/favicon.svg" alt="" />
-    <figcaption></figcaption>
+    <figcaption aria-live="polite" aria-atomic="true"></figcaption>
   </figure>
   <button class="lightbox-next" type="button" aria-label="下一张">›</button>
 </dialog>
@@ -20,8 +20,9 @@
     border: none;
     padding: 0;
     background: transparent;
-    max-width: min(92vw, 1200px);
-    max-height: 92vh;
+    width: min(92vw, 1200px);
+    max-width: 92vw;
+    max-height: 92dvh;
   }
 
   .lightbox::backdrop {
@@ -36,8 +37,8 @@
   }
 
   .lightbox img {
-    max-width: 92vw;
-    max-height: 82vh;
+    width: 100%;
+    height: min(76dvh, 900px);
     object-fit: contain;
     border-radius: var(--radius);
   }
@@ -47,11 +48,12 @@
     font-size: var(--fs-small);
     text-align: center;
     letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
   }
 
   .lightbox button {
     position: absolute;
-    background: rgba(245, 244, 237, 0.14);
+    background: rgba(26, 26, 23, 0.8);
     color: var(--bg);
     border: 1px solid rgba(245, 244, 237, 0.4);
     width: 44px;
@@ -61,6 +63,7 @@
     cursor: pointer;
     display: grid;
     place-items: center;
+    z-index: 1;
   }
 
   .lightbox button:hover {
@@ -69,17 +72,17 @@
   }
 
   .lightbox-close {
-    top: -1.2rem;
-    right: -1.2rem;
+    top: 0.6rem;
+    right: 0.6rem;
   }
 
   .lightbox-prev {
-    left: -1.4rem;
+    left: 0.6rem;
     top: 45%;
   }
 
   .lightbox-next {
-    right: -1.4rem;
+    right: 0.6rem;
     top: 45%;
   }
 
@@ -98,37 +101,34 @@
 </style>
 
 <script>
-  interface LBItem {
-    src: string;
-    alt: string;
-    caption: string;
-  }
-
   const dlg = document.getElementById('lightbox') as HTMLDialogElement | null;
   if (dlg) {
     const imgEl = dlg.querySelector('img')!;
     const capEl = dlg.querySelector('figcaption')!;
     const triggers = Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox]'));
-    const items: LBItem[] = triggers.map((t) => ({
-      src: t.getAttribute('data-lightbox-src') ?? '',
-      alt: t.getAttribute('data-lightbox-alt') ?? '',
-      caption: t.getAttribute('data-lightbox-caption') ?? '',
-    }));
+    let items: HTMLElement[] = [];
     let current = 0;
     let lastFocus: HTMLElement | null = null;
+    let previousOverflow = '';
 
     function show(i: number) {
+      if (!items.length) return;
       current = (i + items.length) % items.length;
       const item = items[current];
-      imgEl.src = item.src;
-      imgEl.alt = item.alt;
-      capEl.textContent = item.caption;
+      imgEl.src = item.dataset.lightboxSrc!;
+      imgEl.alt = item.dataset.lightboxAlt ?? '';
+      capEl.textContent = `${current + 1} / ${items.length} ｜ ${item.dataset.lightboxCaption ?? ''}`;
     }
 
-    triggers.forEach((t, i) => {
+    triggers.forEach((t) => {
       t.addEventListener('click', () => {
+        items = triggers.filter((trigger) => trigger.getClientRects().length > 0 && trigger.dataset.lightboxSrc);
+        const index = items.indexOf(t);
+        if (index < 0 || dlg.open) return;
         lastFocus = t;
-        show(i);
+        show(index);
+        previousOverflow = document.documentElement.style.overflow;
+        document.documentElement.style.overflow = 'hidden';
         dlg!.showModal();
       });
     });
@@ -142,15 +142,17 @@
     });
 
     dlg.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') e.preventDefault();
       if (e.key === 'ArrowLeft') show(current - 1);
       if (e.key === 'ArrowRight') show(current + 1);
     });
 
     dlg.addEventListener('close', () => {
+      document.documentElement.style.overflow = previousOverflow;
       imgEl.src = '/favicon.svg';
       imgEl.alt = '';
       capEl.textContent = '';
-      lastFocus?.focus();
+      lastFocus?.focus({ preventScroll: true });
     });
   }
 </script>

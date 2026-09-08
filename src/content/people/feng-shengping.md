@@ -17,7 +17,6 @@ videos:
 relatedMasks:
   - mask-8529
   - mask-8530
-  - mask-8531
   - mask-8532
 credit: 采访/拍摄：邮你前行-地戏新生实践团
 order: 6

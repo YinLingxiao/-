@@ -25,10 +25,7 @@ relatedMasks:
   - mask-7914
   - mask-7915
   - mask-7916
-  - mask-7918
   - mask-7919
-  - mask-7920
-  - mask-7921
 credit: 采访/拍摄：邮你前行-地戏新生实践团
 order: 1
 visibility: public

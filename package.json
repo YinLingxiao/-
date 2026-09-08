@@ -9,6 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "media:prepare": "node src/scripts/prepare-media.mjs",
     "media:prepare:force": "node src/scripts/prepare-media.mjs --force",
     "astro": "astro"

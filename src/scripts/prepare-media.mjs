@@ -1,10 +1,10 @@
 /**
  * 素材处理脚本（幂等，可重复运行）
  *
- * 数据源：E:\素材\一次分类(1)\一次分类 （只读，绝不修改/重命名/删除源文件）
+ * 数据源由 MEDIA_SOURCE_DIR 环境变量指定，只读原始文件。
  *
  * 产出：
- *  1. 精选照片 34 张 + 面具记录 47 张 → 压缩为 Web 母版（最长边 2400px JPEG）
+ *  1. 精选照片 34 张 + 已命名面具记录 → 压缩为 Web 母版（最长边 2400px JPEG）
  *     输出到 src/assets/media/（供 Astro <Image>/getImage 构建期优化）
  *  2. 13 段原始视频 → 20–60 秒 1080p H.264 压缩短片 → public/media/video/
  *     同时为每段生成 poster 封面 → src/assets/media/video/
@@ -13,12 +13,13 @@
  * 用法：node src/scripts/prepare-media.mjs [--force]
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const SRC = 'E:\\素材\\一次分类(1)\\一次分类';
+const SRC = process.env.MEDIA_SOURCE_DIR;
+if (!SRC) throw new Error('请将 MEDIA_SOURCE_DIR 设置为原始素材根目录。');
 const PHOTO_SRC = join(SRC, '精选照片');
 const MASK_SRC = join(SRC, '面具记录');
 const VIDEO_SRC = join(SRC, '视频分类', '处理后');
@@ -91,14 +92,8 @@ const VIDEO_MAP = [
 /** 首页「精选面具」候选（墙面陈列编号，查看照片后确定） */
 const FEATURED_MASKS = ['8530', '8532', '8552', '8554', '8557', '8608', '8612', '8619'];
 
-/** 仅录入照片中实体标签清晰可辨的角色名；其余统一保留“待考证” */
-const MASK_ROLE_OVERRIDES = {
-  '8536': '呼天宝',
-  '8551': '呼天庆',
-  '8554': '赵公明',
-  '8555': '小军',
-  '8608': '薛应龙',
-};
+/** 项目补充名单是角色名称与收录范围的统一来源；未命名面具不生成。 */
+const MASK_ROLES = JSON.parse(readFileSync(join(ROOT, 'src', 'data', 'mask-roles.json'), 'utf8'));
 
 function run(cmd, args) {
   execFileSync(cmd, args, { stdio: ['ignore', 'ignore', 'inherit'] });
@@ -143,6 +138,8 @@ const maskFiles = readdirSync(MASK_SRC).filter((f) => /^IMG_\d+\.JPG$/i.test(f))
 const masks = [];
 for (const f of maskFiles) {
   const num = f.match(/IMG_(\d+)\.JPG/i)[1];
+  const role = MASK_ROLES[num];
+  if (!role) continue;
   const isWorkshop = Number(num) >= 7912 && Number(num) <= 7921;
   const set = isWorkshop ? 'workshop' : 'wall';
   const name = `mask-${num}.jpg`;
@@ -157,13 +154,13 @@ for (const f of maskFiles) {
     id: `mask-${num}`,
     slug: `mask-${num}`,
     image: `masks/${name}`,
-    alt: isWorkshop ? `燕世忠工坊地戏面具实物近景（编号 ${num}）` : `演武堂墙面陈列地戏面具（编号 ${num}）`,
+    alt: isWorkshop ? `燕世忠工坊${role}地戏面具实物近景（编号 ${num}）` : `演武堂墙面陈列${role}地戏面具（编号 ${num}）`,
     set,
     setLabel: isWorkshop ? '燕世忠工坊实物近景' : '演武堂墙面陈列',
     index: masks.length + 1,
     captureDate: isWorkshop ? '2026-08-04' : '2026-08-06',
     place: isWorkshop ? '长顺县广顺镇·燕世忠工坊' : '安顺市天龙古镇·演武堂',
-    role: MASK_ROLE_OVERRIDES[num] ?? '待考证',
+    role,
     relatedPeople: isWorkshop ? ['yan-shizhong'] : [],
     featured: FEATURED_MASKS.includes(num),
     visibility: 'public',

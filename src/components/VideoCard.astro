@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import { img } from '../utils/images';
+import { formatDuration } from '../utils/media';
 
 interface Props {
   /** media 条目字段 */
@@ -21,22 +22,17 @@ const optimizedPoster = await getImage({
   format: 'webp',
 });
 
-function fmt(sec?: number) {
-  if (!sec) return '';
-  const m = Math.floor(sec / 60);
-  const s = Math.round(sec % 60);
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
+const duration = formatDuration(durationSec);
 ---
 
 <figure class="video-card reveal">
   <div class="video-wrap">
     <!-- 不自动播放、不自动出声；preload=none 实现懒加载 -->
-    <video controls preload="none" poster={optimizedPoster.src} playsinline>
+    <video controls preload="none" poster={optimizedPoster.src} playsinline aria-label={title}>
       <source src={src} type="video/mp4" />
       <p>您的浏览器不支持内嵌视频播放。</p>
     </video>
-    {durationSec && <span class="video-duration" aria-hidden="true">{fmt(durationSec)}</span>}
+    {duration && <span class="video-duration" aria-hidden="true">{duration}</span>}
   </div>
   <figcaption>
     {categoryLabel && <span class="video-cat">{categoryLabel}</span>}
@@ -66,7 +62,7 @@ function fmt(sec?: number) {
   .video-duration {
     position: absolute;
     right: 0.6rem;
-    bottom: 0.6rem;
+    top: 0.6rem;
     background: rgba(26, 26, 23, 0.75);
     color: var(--bg);
     font-size: var(--fs-meta);
